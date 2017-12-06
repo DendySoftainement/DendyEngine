@@ -1,0 +1,33 @@
+
+
+class (by priority)
+I~ interface eg virtual pure without body!!! (or /***/ )      ---> FILE: ~Interface
+A~ abstract pure virtual with body parts (definitions)
+U~ unique
+R~ reference
+C~ standard
+
+
+
+struct
+S
+
+enum
+E
+
+
+vars (by priority)
+   a_~
+   M_~
+   m_~
+   G_~
+   g_~
+
+   type-relative
+      ~Vec : dyVec
+      ~Str : dyString
+
+
+parameters
+a~
+Type const& a_parameter,
