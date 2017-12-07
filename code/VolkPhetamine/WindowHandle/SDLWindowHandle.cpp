@@ -11,6 +11,15 @@
 #include "DendyFoundation/Types.h"
 
 //// - Defines and macro section - ////
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Specific to 'WINDOWS/LINUX' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#ifdef DENDYENGINE_PLATFORM_WINDOWS
+   #define VK_USE_PLATFORM_WIN32_KHR
+#endif
+#ifdef DENDYENGINE_PLATFORM_LINUX
+   #define VK_USE_PLATFORM_XCB_KHR
+#endif
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 
 //// - Using namespace shortcuts - ////
 using namespace DendyEngine::DendyFoundation::Types;
@@ -42,7 +51,7 @@ using namespace DendyEngine::DendyFoundation::Types;
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    USDLWindowHandle::USDLWindowHandle() {
-#ifdef DENDY_DEBUG
+#ifdef DENDYENGINE_MODE_DEBUG
 DENDYENGINE_CALLSTACK_PUSH //----------------------------------------------------------------------------------------------------------------//
 #endif
       // Initialize SDL's Video subsystem
@@ -56,7 +65,7 @@ DENDYENGINE_CALLSTACK_PUSH //---------------------------------------------------
           cout << "Unable to create the window!\n";
           exit(666);
       }
-#ifdef DENDY_DEBUG
+#ifdef DENDYENGINE_MODE_DEBUG
 DENDYENGINE_CALLSTACK_POP //-----------------------------------------------------------------------------------------------------------------//
 #endif
    }

@@ -7,13 +7,17 @@
 
 //// - External includes section - ////
 
+//// -Foundation includes section- ////
+#include "DendyFoundation/DebugTools/DebugSystem.h"
+
 //// - Internal includes section - ////
-#include "DendyFoundation/Types.h"
 
 //// - Defines and macro section - ////
 
+//// - Static const init section - ////
+
 //// - Using namespace shortcuts - ////
-using namespace DendyEngine::DendyFoundation::Types;
+using namespace DendyEngine::Package;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,12 +46,12 @@ using namespace DendyEngine::DendyFoundation::Types;
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    CMyClass::CMyClass() {
-   #ifdef DENDY_DEBUG
-   DENDYENGINE_CALLSTACK_PUSH //-------------------------------------------------------------------------------------------------------------//
+   #ifdef DENDYENGINE_MODE_DEBUG
+   DENDYENGINE_CALLSTACK_ENTER //-------------------------------------------------------------------------------------------------------------//
    #endif
-      
-   #ifdef DENDY_DEBUG
-   DENDYENGINE_CALLSTACK_POP //--------------------------------------------------------------------------------------------------------------//
+
+   #ifdef DENDYENGINE_MODE_DEBUG
+   DENDYENGINE_CALLSTACK_EXIT //--------------------------------------------------------------------------------------------------------------//
    #endif
    }
 
