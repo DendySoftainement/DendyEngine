@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED( VERSION 3.10.0 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.5.0 )
 PROJECT( DendyEngine )
 
 #set(CMAKE_BUILD_TYPE "Release")
@@ -68,26 +68,47 @@ endif()
 
 
 
+#============== Dendy Foundation ==============#
+set(DENDY_FOUNDATION_LIBRARY_NAME DendyFoundation)
+set(DENDY_FOUNDATION_LIBRARY_VERSION_MAJOR 1)
+set(DENDY_FOUNDATION_LIBRARY_VERSION_MINOR 0)
+set(DENDY_FOUNDATION_LIBRARY_VERSION_PATCH 0)
+set(DENDY_FOUNDATION_LIBRARY_VERSION_NAME V${DENDY_FOUNDATION_LIBRARY_VERSION_MAJOR}.${DENDY_FOUNDATION_LIBRARY_VERSION_MINOR}.${DENDY_FOUNDATION_LIBRARY_VERSION_PATCH})
+
+file(GLOB_RECURSE DENDY_FOUNDATION_LIBRARY_HEADER_FILES code/DendyFoundation/*.h)
+file(GLOB_RECURSE DENDY_FOUNDATION_LIBRARY_SOURCE_FILES code/DendyFoundation/*.cpp)
+include_directories(code)
 
 
-file(GLOB_RECURSE HEADER_FILES code/hdr/*.h)
-file(GLOB_RECURSE SOURCE_FILES code/src/*.cpp code/*.cpp)
+# Create shared library
+add_library(
+   ${DENDY_FOUNDATION_LIBRARY_NAME}
+      SHARED ${DENDY_FOUNDATION_LIBRARY_SOURCE_FILES}
+)
 
-
-#add_definitions( -DDEBUG=1 )
-#add_definitions( -DOPENGL=0 )
-#add_definitions( -DVULKAN=1 )
-
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
-
+# Install library
 set_target_properties(
-   ${PROJECT_NAME}
-      PROPERTIES
-         COMPILE_DEFINITIONS
-            DENDYENGINE_MODE_DEBUG=1
-            DENDYENGINE_PLATFORM_WINDOWS=0
-            DENDYENGINE_PLATFORM_LINUX=1
-            DENDY_VERSION_MAJOR=1
-            DENDY_VERSION_MINOR=0
-            DENDY_VERSION_PATCH=0
+   ${DENDY_FOUNDATION_LIBRARY_NAME}
+      PROPERTIES PREFIX ""
+      LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib/${DENDY_FOUNDATION_LIBRARY_NAME}/${DENDY_FOUNDATION_LIBRARY_VERSION_NAME}"
+)
+
+# Install library headers
+install(
+   FILES ${DENDY_FOUNDATION_LIBRARY_HEADER_FILES}
+      DESTINATION ${CMAKE_SOURCE_DIR}/include/${DENDY_FOUNDATION_LIBRARY_NAME}/${DENDY_FOUNDATION_LIBRARY_VERSION_NAME}
+)
+
+
+
+
+#add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
+
+target_compile_definitions( ${DENDY_FOUNDATION_LIBRARY_NAME}
+                                                   PRIVATE DENDYENGINE_MODE_DEBUG=1
+                                                   #DENDYENGINE_PLATFORM_WINDOWS=0
+                                                   DENDYENGINE_PLATFORM_LINUX=1
+                                                   DENDYENGINE_VERSION_MAJOR=1
+                                                   DENDYENGINE_VERSION_MINOR=0
+                                                   DENDYENGINE_VERSION_PATCH=0
 )
