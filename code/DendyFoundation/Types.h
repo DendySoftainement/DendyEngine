@@ -86,7 +86,7 @@ namespace DendyEngine {
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
    template<class T>
-   dyBool is_lexically_castable(dyString const& a_string) {
+   dyBool is_lexically_castable( dyString const& a_string ) {
    	std::stringstream ss(a_string);
    	T result;
    	if ((ss >> result).fail() || !(ss >> std::ws).eof())
@@ -95,7 +95,7 @@ namespace DendyEngine {
    }
 
    template<class T>
-   T lexical_cast(dyString const& a_string) {
+   T lexical_cast( dyString const& a_string ) {
    	std::stringstream ss(a_string);
    	T result;
    	ss >> result;

@@ -1,4 +1,4 @@
-#include "VolkPhetamine/WindowHandle/WindowHandleInterface.h"
+#include "DendyFoundation/DebugTools/DebugStack.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8,7 +8,7 @@
 //// - External includes section - ////
 
 //// -Foundation includes section- ////
-#include "DendyFoundation/DebugTools/DebugSystem.h"
+#include "DendyFoundation/Types.h"
 
 //// - Internal includes section - ////
 
@@ -17,14 +17,13 @@
 //// ---- Namespaces ---- ////
 namespace DendyEngine {
 
-   namespace CurrentPackage {
+   namespace DendyFoundation {
 
-      namespace CurrentSubPackage {
+      namespace DebugTools {
 
 //// - Defines and macro section - ////
 
 //// - Using namespace shortcuts - ////
-using namespace DendyEngine::Package;
 
 //// - Static const init section - ////
 
@@ -32,7 +31,7 @@ using namespace DendyEngine::Package;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// CMyClass
+// UDebugStack
 //{
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    ////  ================================================================================================================================  ////
@@ -43,21 +42,28 @@ using namespace DendyEngine::Package;
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
+   void UDebugStack::_dump() {
+      std::stack<SDebugEvent> stack = m_stack;
+      SDebugEvent currentDebug;
+      dyString callStackStr;
 
+      dyInt level = 0;
 
-   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ////  ================================================================================================================================  ////
-   ////    ---- Object oriented methods -----                                                                                              ////
-   ////  ================================================================================================================================  ////
-   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   CMyClass::CMyClass() {
-   DENDYENGINE_CALLSTACK_ENTER
-
-   DENDYENGINE_CALLSTACK_EXIT
+      // Drop context/messages for display (update backup stack)
+      while (!stack.empty()) {
+         currentDebug = m_stack.top();
+         if (currentDebug.type != EEventType::BEGIN) {
+            level++;
+            dyString levelStr = "";
+            for (i_level=0; i_level<level; level++) {
+               levelStr += '\t';
+            }
+            SCodeLocation location = stack.top().context;
+            callStackStr += levelStr + ">>[" + location.fileStr + "]::(" + location.lineStr + ")::{" + location.functionStr + '\n';
+         }
+         stack.pop();
+      }
+      std::cout << callStackStr << std::endl;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,19 +73,25 @@ using namespace DendyEngine::Package;
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
+   // Singleton pattern stuff (unique creation only)
    //----------------------------------------------------------------------------------------------------------------------------------------//
-
-
-   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   ////  ================================================================================================================================  ////
-   ////    ---- Acessor methods -----                                                                                                      ////
-   ////  ================================================================================================================================  ////
-   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   UDebugStack& UDebugStack::getInstance() {
+      static UDebugStack* debugStack = nullptr;
+      if (debugStack == nullptr) {
+         debugStack = new UErrorHandler();
+      }
+      return *debugStack;
+   }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
+   // Singleton pattern stuff (destruction)
    //----------------------------------------------------------------------------------------------------------------------------------------//
+   UDebugStack& UDebugStack::destroyInstance() {
+      static UDebugStack* debugStack = &getInstance();
+      if (debugStack != nullptr) {
+         delete debugStack;
+      }
+   }
 
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,8 +103,48 @@ using namespace DendyEngine::Package;
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
+   void UDebugStack::enter( dyString a_locationStr ) {
+      SDebugEvent debugEvent;
+      debugEvent.type = EEventType::BEGIN;
+      debugEvent.messageStr = "";
+      debugEvent.context = SCodeLocation( a_locationStr );
+      m_stack.push( debugEvent );
+   }
 
+   void UDebugStack::log( dyString a_messageStr, dyString a_locationStr ) {
+      SDebugEvent debugEvent;
+      debugEvent.type = EEventType::LOG;
+      debugEvent.messageStr = a_messageStr;
+      debugEvent.context = SCodeLocation( a_locationStr );
+      m_stack.push( debugEvent );
+   }
 
+   void UDebugStack::exit() {
+      while (!m_stack.empty() && m_stack.top().type != EEventType::BEGIN) {
+         m_stack.pop();
+      }
+      if (!m_stack.empty()) {
+         m_errorCallStack.pop();
+      }
+   }
+
+   void UDebugStack::error( dyString a_messageStr, dyString a_locationStr  ) {
+      SDebugEvent debugEvent;
+      debugEvent.type = EEventType::ERROR;
+      debugEvent.messageStr = a_messageStr;
+      debugEvent.context = SCodeLocation( a_locationStr );
+      m_stack.push( debugEvent );
+   }
+
+   void UDebugStack::criticalError( dyString a_messageStr, dyString a_locationStr  ) {
+      SDebugEvent debugEvent;
+      debugEvent.type = EEventType::CRITICAL_ERROR;
+      debugEvent.messageStr = a_messageStr;
+      debugEvent.context = SCodeLocation( a_locationStr );
+      m_stack.push( debugEvent );
+      _dump();
+      exit(EXIT_FAILURE);
+   }
 //}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -111,18 +111,34 @@ install(
 
 
 
+#file(GLOB_RECURSE INCLUDE_HEADER_FILES include/*.h)
 
 #add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
-add_executable(${PROJECT_NAME} code/main.cpp)
+add_executable( ${PROJECT_NAME} ${INCLUDE_HEADER_FILES} code/main.cpp )
 
 include_directories(${DENDY_FOUNDATION_LIBRARY_INCLUDE})
-link_libraries(${DENDY_FOUNDATION_LIBRARY_LIB})
+#link_libraries(${DENDY_FOUNDATION_LIBRARY_LIB})
 
-target_compile_definitions( ${DENDY_FOUNDATION_LIBRARY_NAME}
-                                                   PRIVATE DENDYENGINE_MODE_DEBUG=1
-                                                   #DENDYENGINE_PLATFORM_WINDOWS=0
-                                                   DENDYENGINE_PLATFORM_LINUX=1
-                                                   DENDYENGINE_VERSION_MAJOR=1
-                                                   DENDYENGINE_VERSION_MINOR=0
-                                                   DENDYENGINE_VERSION_PATCH=0
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${DENDY_FOUNDATION_LIBRARY_NAME})
+
+target_compile_definitions(
+   ${DENDY_FOUNDATION_LIBRARY_NAME}
+      PRIVATE
+         DENDYENGINE_MODE_DEBUG=1
+         #DENDYENGINE_PLATFORM_WINDOWS=0
+         DENDYENGINE_PLATFORM_LINUX=1
+         DENDYENGINE_VERSION_MAJOR=1
+         DENDYENGINE_VERSION_MINOR=0
+         DENDYENGINE_VERSION_PATCH=0
+)
+
+target_compile_definitions(
+   ${PROJECT_NAME}
+      PRIVATE
+         DENDYENGINE_MODE_DEBUG=1
+         #DENDYENGINE_PLATFORM_WINDOWS=0
+         DENDYENGINE_PLATFORM_LINUX=1
+         DENDYENGINE_VERSION_MAJOR=1
+         DENDYENGINE_VERSION_MINOR=0
+         DENDYENGINE_VERSION_PATCH=0
 )

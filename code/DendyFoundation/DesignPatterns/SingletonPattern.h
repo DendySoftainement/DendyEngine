@@ -62,6 +62,7 @@ namespace DendyEngine {
             ASingleton( ASingleton const& src ) = delete;
             ASingleton& operator=( const ASingleton& rhs ) = delete;
 
+         public:
          //// ----  Static  ---- ////
             static ASingleton& getInstance();
 
