@@ -8,7 +8,7 @@
 //// - External includes section - ////
 
 //// -Foundation includes section- ////
-#include "DendyFoundation/DebugTools/DebugSystem.h"
+#include "DendyFoundation/DebugTools/DebugStack.h"
 
 //// - Internal includes section - ////
 
@@ -55,9 +55,9 @@ using namespace DendyEngine::Package;
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    CMyClass::CMyClass() {
-   DENDYENGINE_CALLSTACK_ENTER
+   DENDYENGINE_CALLSTACK_ENTER;
 
-   DENDYENGINE_CALLSTACK_EXIT
+   DENDYENGINE_CALLSTACK_EXIT;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

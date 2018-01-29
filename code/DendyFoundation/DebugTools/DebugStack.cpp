@@ -96,7 +96,7 @@ namespace DendyEngine {
       // Drop context/messages for display (update backup stack)
       while (!m_stack.empty()) {
          currentDebug = m_stack.top();
-         if (currentDebug.type == EEventType::BEGIN) {
+         if (currentDebug.type == EEventType::DY_BEGIN) {
             level++;
             dyString levelStr = "";
             for (dyUInt i_level=0; i_level<level; level++) {
@@ -105,7 +105,7 @@ namespace DendyEngine {
             SCodeLocation location = m_stack.top().context;
             callStackStr += levelStr + ">>[" + location.fileStr + "]::(" + location.lineStr + ")::{" + location.functionStr + '\n';
          }
-         if (currentDebug.type == EEventType::CRITICAL_ERROR) {
+         if (currentDebug.type == EEventType::DY_CRITICAL_ERROR) {
             level++;
             dyString levelStr = "";
             for (dyUInt i_level=0; i_level<level; level++) {
@@ -158,7 +158,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void UDebugStack::enter( dyString a_locationStr ) {
       SDebugEvent debugEvent;
-      debugEvent.type = EEventType::BEGIN;
+      debugEvent.type = EEventType::DY_BEGIN;
       debugEvent.messageStr = "";
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
@@ -166,14 +166,14 @@ namespace DendyEngine {
 
    void UDebugStack::log( dyString a_messageStr, dyString a_locationStr ) {
       SDebugEvent debugEvent;
-      debugEvent.type = EEventType::LOG;
+      debugEvent.type = EEventType::DY_LOG;
       debugEvent.messageStr = a_messageStr;
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
    }
 
    void UDebugStack::exit() {
-      while (!m_stack.empty() && m_stack.top().type != EEventType::BEGIN) {
+      while (!m_stack.empty() && m_stack.top().type != EEventType::DY_BEGIN) {
          m_stack.pop();
       }
       if (!m_stack.empty()) {
@@ -183,7 +183,7 @@ namespace DendyEngine {
 
    void UDebugStack::error( dyString a_messageStr, dyString a_locationStr  ) {
       SDebugEvent debugEvent;
-      debugEvent.type = EEventType::ERROR;
+      debugEvent.type = EEventType::DY_ERROR;
       debugEvent.messageStr = a_messageStr;
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
@@ -191,7 +191,7 @@ namespace DendyEngine {
 
    void UDebugStack::criticalError( dyString a_messageStr, dyString a_locationStr  ) {
       SDebugEvent debugEvent;
-      debugEvent.type = EEventType::CRITICAL_ERROR;
+      debugEvent.type = EEventType::DY_CRITICAL_ERROR;
       debugEvent.messageStr = a_messageStr;
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );

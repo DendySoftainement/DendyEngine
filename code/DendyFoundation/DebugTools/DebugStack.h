@@ -29,8 +29,6 @@
 #include "DendyFoundation/InputOutput/OutputStreamInterface.h"
 
 //// - Internal includes section - ////
-#include "DendyFoundation/ExportDLL.h"
-//#include "DendyFoundation/DebugTools/CallStack.h"
 
 //// - Defines and macro section - ////
 #ifndef _DENDYENGINE_DEFINEGUARD_DEBUG_SYSTEM
@@ -88,18 +86,18 @@ namespace DendyEngine {
 ////   Class CDebugMessage                                                                                                                               ////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         class API_DLL UDebugStack {
+         class UDebugStack {
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Enum/Struct/Constants -----                                                                                                   ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
             enum class EEventType {
-               BEGIN,
-               END,
-               LOG,
-               ERROR,
-               CRITICAL_ERROR
+               DY_BEGIN,
+               DY_END,
+               DY_LOG,
+               DY_ERROR,
+			   DY_CRITICAL_ERROR
             };
 
             struct SCodeLocation {
@@ -114,7 +112,7 @@ namespace DendyEngine {
                dyString      messageStr;
                SCodeLocation context;
                SDebugEvent():
-                  type( EEventType::LOG ),
+                  type( EEventType::DY_LOG ),
                   messageStr( "" ),
                   context( "" )
                      {/***/};

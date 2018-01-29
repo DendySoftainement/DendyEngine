@@ -23,11 +23,14 @@
 
 //// - External includes section - ////
 #include <SDL2/SDL.h>
-#include <SDL_video.h>
-#include <vulkan/vulkan.h>
+#include <SDL2/SDL_video.h>
+//#include <vulkan/vulkan.h>
+
+//// -Foundation includes section- ////
+#include "DendyFoundation/Types.h"
 
 //// - Internal includes section - ////
-#include "DendyFoundation/Types.h"
+#include "VolkPhetamine/WindowHandle/WindowHandleInterface.h"
 
 //// - Defines and macro section - ////
 
@@ -57,7 +60,7 @@ namespace DendyEngine {
 
          // \brief     Unique class to initialize window platform dependent system for display
          // \details   None
-         class USDLWindowHandle : public IWindowHandle {
+         class USDLWindowHandle : public IWindowHandle<SDL_Window> {
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Enum/Struct/Constants -----                                                                                                   ////
@@ -69,7 +72,7 @@ namespace DendyEngine {
          //// ---- Members -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
-            RVulkanReadyWindow m_binding;
+            SVulkanReadyWindow m_binding;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
@@ -87,8 +90,8 @@ namespace DendyEngine {
          //// ----   Core   ---- ////
             // \brief     None
             // \details   None
-            RVulkanReadyWindow<SDL_Window> openWindow();
-            closeWindow( RVulkanReadyWindow<SDL_Window> window );
+            SVulkanReadyWindow openWindow();
+            void closeWindow(SVulkanReadyWindow window );
 
          };
 

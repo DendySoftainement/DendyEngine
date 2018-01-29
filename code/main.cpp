@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <windows.h> 
 
 #include "DendyFoundation/Types.h"
 #include "DendyFoundation/DebugTools/DebugStack.h"
@@ -18,6 +19,8 @@ int main( int argc, char** argv ) {
    std::cout << myString << std::endl;
 
    DENDYENGINE_CRITICAL_ERROR("This sis an error");
+
+   Sleep(3000);
 
    return EXIT_SUCCESS;
 }
