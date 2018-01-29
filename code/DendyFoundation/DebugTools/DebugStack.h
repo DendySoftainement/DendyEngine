@@ -29,6 +29,7 @@
 #include "DendyFoundation/InputOutput/OutputStreamInterface.h"
 
 //// - Internal includes section - ////
+#include "DendyFoundation/ExportDLL.h"
 //#include "DendyFoundation/DebugTools/CallStack.h"
 
 //// - Defines and macro section - ////
@@ -44,12 +45,12 @@
       #define _DENDYENGINE_CURRENT_FUNCTION __FUNCTION__
    #endif
    #ifdef DENDYENGINE_PLATFORM_LINUX
-      #define _DENDYENGINE_CURRENT_FUNCTION _DENDYENGINE_DISPLAY_VALUE_HELPER(__func__)
+      #define _DENDYENGINE_CURRENT_FUNCTION _DENDYENGINE_DISPLAY_VALUE_HELPER(__PRETTY_FUNCTION__)
    #endif
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
    // Stack display message (file:function:line)
-   #define _DENDYENGINE_LOCATION ( __FILE__ ":" _DENDYENGINE_CURRENT_FUNCTION ":" _DENDYENGINE_DISPLAY_VALUE_HELPER(__LINE__) )
+   #define _DENDYENGINE_LOCATION ( __FILE__ "#" _DENDYENGINE_CURRENT_FUNCTION "#" _DENDYENGINE_DISPLAY_VALUE_HELPER(__LINE__) )
 
    ////////////////////////////////////////////////////////////
    // The actually public interface for the Debug system !!! //
@@ -87,7 +88,7 @@ namespace DendyEngine {
 ////   Class CDebugMessage                                                                                                                               ////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         class UDebugStack {
+         class API_DLL UDebugStack {
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Enum/Struct/Constants -----                                                                                                   ////
@@ -112,8 +113,11 @@ namespace DendyEngine {
                EEventType    type;
                dyString      messageStr;
                SCodeLocation context;
-               dyInt         level;
-			   SDebugEvent() { /***/ }
+               SDebugEvent():
+                  type( EEventType::LOG ),
+                  messageStr( "" ),
+                  context( "" )
+                     {/***/};
             };
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +133,7 @@ namespace DendyEngine {
          private:
          //// ---- Internal ---- ////
             void _dump();
+            void _flush();
 
          public:
          //// ----  Object  ---- ////

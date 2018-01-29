@@ -34,11 +34,21 @@ namespace DendyEngine {
 
 // SCodeLocation
 //{
-		  SCodeLocation::SCodeLocation( dyString rawLocationStr ) {
-			  fileStr = ;
-			  functionStr;
-			  lineStr;
-		  }
+   UDebugStack::SCodeLocation::SCodeLocation( dyString a_rawLocationStr ) {
+      if (a_rawLocationStr == "") {
+         return;
+      }
+      dyString infoStr = a_rawLocationStr;
+      dyInt pos = infoStr.find("/code/");
+      infoStr = infoStr.substr(pos+6);
+      pos = infoStr.find("#");
+      this->fileStr = infoStr.substr(0, pos);
+      infoStr = infoStr.substr(pos+1);
+      pos = infoStr.find("#");
+      this->functionStr = infoStr.substr(0, pos);
+      infoStr = infoStr.substr(pos+1);
+      this->lineStr = infoStr;
+   }
 //}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,25 +67,54 @@ namespace DendyEngine {
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void UDebugStack::_dump() {
-      std::stack<SDebugEvent> stack = m_stack;
+      std::stack<SDebugEvent> backupStack = m_stack;
+      _flush();
+      m_stack = backupStack;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void UDebugStack::_flush() {
       SDebugEvent currentDebug;
       dyString callStackStr;
 
-      dyInt level = 0;
+      dyUInt level = 0;
+
+      SCodeLocation location = m_stack.top().context;
+      callStackStr += "File: " + location.fileStr + " function: " + location.functionStr +  " line: " + location.lineStr + '\n';
+      std::cout << callStackStr << std::endl;
+
+      m_stack.pop();
+
+      location = m_stack.top().context;
+      callStackStr += "File: " + location.fileStr + " function: " + location.functionStr +  " line: " + location.lineStr + '\n';
+      std::cout << callStackStr << std::endl;
+      return;
+
 
       // Drop context/messages for display (update backup stack)
-      while (!stack.empty()) {
+      while (!m_stack.empty()) {
          currentDebug = m_stack.top();
-         if (currentDebug.type != EEventType::BEGIN) {
+         if (currentDebug.type == EEventType::BEGIN) {
             level++;
             dyString levelStr = "";
-            for (dyInt i_level=0; i_level<level; level++) {
+            for (dyUInt i_level=0; i_level<level; level++) {
                levelStr += '\t';
             }
-            SCodeLocation location = stack.top().context;
+            SCodeLocation location = m_stack.top().context;
             callStackStr += levelStr + ">>[" + location.fileStr + "]::(" + location.lineStr + ")::{" + location.functionStr + '\n';
          }
-         stack.pop();
+         if (currentDebug.type == EEventType::CRITICAL_ERROR) {
+            level++;
+            dyString levelStr = "";
+            for (dyUInt i_level=0; i_level<level; level++) {
+               levelStr += '\t';
+            }
+            SCodeLocation location = m_stack.top().context;
+            callStackStr += levelStr + ">>[" + location.fileStr + "]::(" + location.lineStr + ")::{" + location.functionStr + '\n';
+         }
+         m_stack.pop();
       }
       std::cout << callStackStr << std::endl;
    }
@@ -138,7 +177,7 @@ namespace DendyEngine {
          m_stack.pop();
       }
       if (!m_stack.empty()) {
-		  m_stack.pop();
+         m_stack.pop();
       }
    }
 
@@ -157,7 +196,6 @@ namespace DendyEngine {
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
       _dump();
-      exit();
    }
 //}
 

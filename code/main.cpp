@@ -11,8 +11,13 @@ int main( int argc, char** argv ) {
 
    DENDYENGINE_CALLSTACK_ENTER;
 
-   dyString myString = "Hello world";
+   dyString myString = __FUNCTION__;
+
+   DENDYENGINE_CALLSTACK_ENTER;
 
    std::cout << myString << std::endl;
+
+   DENDYENGINE_CRITICAL_ERROR("This sis an error");
+
    return EXIT_SUCCESS;
 }
