@@ -105,7 +105,7 @@ namespace DendyEngine {
                dyString fileStr;
                dyString functionStr;
                dyString lineStr;
-               SCodeLocation( dyString rawLocationStr );
+               SCodeLocation( dyString rawLocationStr = "" );
             };
 
             struct SDebugEvent {
@@ -113,6 +113,7 @@ namespace DendyEngine {
                dyString      messageStr;
                SCodeLocation context;
                dyInt         level;
+			   SDebugEvent() { /***/ }
             };
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //// - Standard includes section - ////
+#include <iostream>
 
 //// - External includes section - ////
 
@@ -31,6 +32,19 @@ namespace DendyEngine {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// SCodeLocation
+//{
+		  SCodeLocation::SCodeLocation( dyString rawLocationStr ) {
+			  fileStr = ;
+			  functionStr;
+			  lineStr;
+		  }
+//}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////                                                                                                                                                        ////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // UDebugStack
 //{
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,7 +69,7 @@ namespace DendyEngine {
          if (currentDebug.type != EEventType::BEGIN) {
             level++;
             dyString levelStr = "";
-            for (i_level=0; i_level<level; level++) {
+            for (dyInt i_level=0; i_level<level; level++) {
                levelStr += '\t';
             }
             SCodeLocation location = stack.top().context;
@@ -78,7 +92,7 @@ namespace DendyEngine {
    UDebugStack& UDebugStack::getInstance() {
       static UDebugStack* debugStack = nullptr;
       if (debugStack == nullptr) {
-         debugStack = new UErrorHandler();
+         debugStack = new UDebugStack();
       }
       return *debugStack;
    }
@@ -86,7 +100,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    // Singleton pattern stuff (destruction)
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   UDebugStack& UDebugStack::destroyInstance() {
+   void UDebugStack::destroyInstance() {
       static UDebugStack* debugStack = &getInstance();
       if (debugStack != nullptr) {
          delete debugStack;
@@ -124,7 +138,7 @@ namespace DendyEngine {
          m_stack.pop();
       }
       if (!m_stack.empty()) {
-         m_errorCallStack.pop();
+		  m_stack.pop();
       }
    }
 
@@ -143,7 +157,7 @@ namespace DendyEngine {
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
       _dump();
-      exit(EXIT_FAILURE);
+      exit();
    }
 //}
 

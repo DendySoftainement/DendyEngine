@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "DendyFoundation/Types.h"
-#include "DendyFoundation/DebugTools/DebugSystem.h"
+#include "DendyFoundation/DebugTools/DebugStack.h"
 
 using namespace DendyEngine;
 //using namespace DendyEngine::DendyFoundation;

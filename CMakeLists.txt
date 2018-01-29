@@ -24,46 +24,46 @@ if (OPENGL_FOUND)
     link_libraries(${OPENGL_LIBRARIES})
 endif()
 
-find_package(GLEW REQUIRED)
-if(GLEW_FOUND)
+#find_package(GLEW REQUIRED)
+#if(GLEW_FOUND)
     include_directories(${GLEW_INCLUDE_DIR})
     link_libraries(${GLEW_LIBRARY})
-endif()
+#endif()
 
-find_package(GLM REQUIRED)
-if(GLM_FOUND)
+#find_package(GLM REQUIRED)
+#if(GLM_FOUND)
     include_directories(${GLM_INCLUDE_DIRS})
-endif()
+#endif()
 
 
 
 
 
-find_package(SDL2 REQUIRED)
-if(SDL2_FOUND)
+#find_package(SDL2 REQUIRED)
+#if(SDL2_FOUND)
     include_directories(${SDL2_INCLUDE_DIR})
     link_libraries(${SDL2_LIBRARY})
-endif()
+#endif()
 
-find_package(Vulkan REQUIRED)
-if(Vulkan_FOUND)
+#find_package(Vulkan REQUIRED)
+#if(Vulkan_FOUND)
     include_directories(${VULKAN_INCLUDE_DIR})
     link_libraries(${VULKAN_LIBRARY})
-endif()
+#endif()
 
 
-find_package(X11_XCB)
-if(X11_XCB_FOUND)
+#find_package(X11_XCB)
+#if(X11_XCB_FOUND)
   add_definitions(-DHAVE_X11_XCB)
   list(APPEND SUBSYSTEMS [X11])
   include_directories(${X11_XCB_INCLUDE_DIRS})
-endif()
+#endif()
 
-find_package(SDL2_image REQUIRED)
-if(SDL2_IMAGE_FOUND)
+#find_package(SDL2_image REQUIRED)
+#if(SDL2_IMAGE_FOUND)
     include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
     link_libraries(${SDL2_IMAGE_LIBRARIES})
-endif()
+#endif()
 #============== Link Dependancies ==============#
 
 
@@ -83,7 +83,10 @@ file(GLOB_RECURSE DENDY_FOUNDATION_LIBRARY_SOURCE_FILES code/DendyFoundation/*.c
 add_library(
    ${DENDY_FOUNDATION_LIBRARY_NAME}
       SHARED ${DENDY_FOUNDATION_LIBRARY_SOURCE_FILES}
+             ${DENDY_FOUNDATION_LIBRARY_HEADER_FILES}
 )
+
+#include_directories(${DENDY_FOUNDATION_LIBRARY_HEADER_FILES})
 
 # Install library
 set( DENDY_FOUNDATION_LIBRARY_LIB "${CMAKE_SOURCE_DIR}/lib/${DENDY_FOUNDATION_LIBRARY_NAME}/${DENDY_FOUNDATION_LIBRARY_VERSION_NAME}" )
@@ -125,8 +128,8 @@ target_compile_definitions(
    ${DENDY_FOUNDATION_LIBRARY_NAME}
       PRIVATE
          DENDYENGINE_MODE_DEBUG=1
-         #DENDYENGINE_PLATFORM_WINDOWS=0
-         DENDYENGINE_PLATFORM_LINUX=1
+         DENDYENGINE_PLATFORM_WINDOWS=1
+         #DENDYENGINE_PLATFORM_LINUX=1
          DENDYENGINE_VERSION_MAJOR=1
          DENDYENGINE_VERSION_MINOR=0
          DENDYENGINE_VERSION_PATCH=0
@@ -136,8 +139,8 @@ target_compile_definitions(
    ${PROJECT_NAME}
       PRIVATE
          DENDYENGINE_MODE_DEBUG=1
-         #DENDYENGINE_PLATFORM_WINDOWS=0
-         DENDYENGINE_PLATFORM_LINUX=1
+         DENDYENGINE_PLATFORM_WINDOWS=1
+         #DENDYENGINE_PLATFORM_LINUX=1
          DENDYENGINE_VERSION_MAJOR=1
          DENDYENGINE_VERSION_MINOR=0
          DENDYENGINE_VERSION_PATCH=0
