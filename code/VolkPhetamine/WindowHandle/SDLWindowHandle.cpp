@@ -57,14 +57,7 @@ namespace DendyEngine {
       if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		  DENDYENGINE_CRITICAL_ERROR("Unable to initialize SDL!");
       }
-
-      // Create our windows centered
-	  m_binding.window = SDL_CreateWindow( "VolkPhetamine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN );
-      if (m_binding.window == nullptr) {
-		  DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
-          exit(666);
-      }
-	  DENDYENGINE_CALLSTACK_EXIT;
+	DENDYENGINE_CALLSTACK_EXIT;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
@@ -105,7 +98,27 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
+   USDLWindowHandle::SVulkanReadyWindow USDLWindowHandle::openWindow() {
+   DENDYENGINE_CALLSTACK_ENTER;
+      SVulkanReadyWindow windowBinding;
 
+      // Create our windows centered
+      windowBinding.window = SDL_CreateWindow("VolkPhetamine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+      if (windowBinding.window == nullptr) {
+         DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
+         exit(666);
+      }
+
+      return windowBinding;
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void USDLWindowHandle::closeWindow(SVulkanReadyWindow a_window) {
+      // TODO
+   }
 
 //}
 

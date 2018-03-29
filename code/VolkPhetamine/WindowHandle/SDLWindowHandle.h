@@ -22,6 +22,7 @@
 //// - Standard includes section - ////
 
 //// - External includes section - ////
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
 //#include <vulkan/vulkan.h>

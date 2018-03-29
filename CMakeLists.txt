@@ -44,12 +44,13 @@ endif()
 
 
 
-
-#find_package(SDL2 REQUIRED)
-#if(SDL2_FOUND)
+set( SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/SDL2" )
+set( SDL2_LIBRARY "${CMAKE_SOURCE_DIR}/lib/SDL2/SDL2.lib" )
+find_package(SDL2 REQUIRED)
+if(SDL2_FOUND)
     include_directories(${SDL2_INCLUDE_DIR})
     link_libraries(${SDL2_LIBRARY})
-#endif()
+endif()
 
 #find_package(Vulkan REQUIRED)
 #if(Vulkan_FOUND)
@@ -114,7 +115,7 @@ install(
 
 
 
-#============== Volk Phetamine ==============#
+# ============== Volk Phetamine ==============#
 set(VOLK_PHETAMINE_LIBRARY_NAME VolkPhetamine)
 set(VOLK_PHETAMINE_LIBRARY_VERSION_MAJOR 1)
 set(VOLK_PHETAMINE_LIBRARY_VERSION_MINOR 0)
@@ -132,7 +133,7 @@ add_library(
              ${VOLK_PHETAMINE_LIBRARY_HEADER_FILES}
 )
 
-include_directories(${DENDY_FOUNDATION_LIBRARY_HEADER_FILES})
+# (${VOLK_PHETAMINE_LIBRARY_HEADER_FILES})
 target_link_libraries(${VOLK_PHETAMINE_LIBRARY_NAME} ${DENDY_FOUNDATION_LIBRARY_NAME} ${SDL2_LIBRARY})
 
 
@@ -151,7 +152,7 @@ install(
    FILES ${VOLK_PHETAMINE_LIBRARY_HEADER_FILES}
       DESTINATION ${VOLK_PHETAMINE_LIBRARY_INCLUDE}
 )
-#============== Volk Phetamine ==============#
+# ============== Volk Phetamine ==============#
 
 
 
@@ -169,16 +170,16 @@ add_executable( ${PROJECT_NAME} ${INCLUDE_HEADER_FILES} code/main.cpp )
 
 include_directories(${DENDY_FOUNDATION_LIBRARY_INCLUDE})
 include_directories(${VOLK_PHETAMINE_LIBRARY_INCLUDE})
-#link_libraries(${DENDY_FOUNDATION_LIBRARY_LIB})
+# link_libraries(${DENDY_FOUNDATION_LIBRARY_LIB})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${DENDY_FOUNDATION_LIBRARY_NAME} ${VOLK_PHETAMINE_LIBRARY_NAME})
+target_link_libraries(${PROJECT_NAME} ${DENDY_FOUNDATION_LIBRARY_NAME} ${VOLK_PHETAMINE_LIBRARY_NAME})
 
 target_compile_definitions(
    ${DENDY_FOUNDATION_LIBRARY_NAME}
       PRIVATE
          DENDYENGINE_MODE_DEBUG=1
          DENDYENGINE_PLATFORM_WINDOWS=1
-         #DENDYENGINE_PLATFORM_LINUX=1
+         # DENDYENGINE_PLATFORM_LINUX=1
          DENDYENGINE_VERSION_MAJOR=1
          DENDYENGINE_VERSION_MINOR=0
          DENDYENGINE_VERSION_PATCH=0
@@ -200,7 +201,7 @@ target_compile_definitions(
       PRIVATE
          DENDYENGINE_MODE_DEBUG=1
          DENDYENGINE_PLATFORM_WINDOWS=1
-         #DENDYENGINE_PLATFORM_LINUX=1
+         # DENDYENGINE_PLATFORM_LINUX=1
          DENDYENGINE_VERSION_MAJOR=1
          DENDYENGINE_VERSION_MINOR=0
          DENDYENGINE_VERSION_PATCH=0

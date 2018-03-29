@@ -81,8 +81,8 @@ namespace DendyEngine {
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    public:
    //// ----  Object  ---- ////
-      IWindowHandle() { /***/ };
-      virtual ~IWindowHandle() = 0;
+      //IWindowHandle() { /***/ };
+     // virtual ~IWindowHandle() = 0;
 
    //// ----   Core   ---- ////
       virtual SVulkanReadyWindow openWindow() = 0;
