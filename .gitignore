@@ -1,0 +1,5 @@
+
+*.log
+*.tlog
+*.filters
+build/.vs/DendyEngine/v14/.suo
