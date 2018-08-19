@@ -15,6 +15,9 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+
 # Build with .lib and .dll for libraries on windows
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
 set(BUILD_SHARED_LIBS true) 
@@ -30,10 +33,12 @@ if (OPENGL_FOUND)
     link_libraries(${OPENGL_LIBRARIES})
 endif()
 
+set( GLFW_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/GLFW" )
+set( GLFW_LIBRARY "${CMAKE_SOURCE_DIR}/lib/GLFW/glfw3.lib" )
 #find_package(GLEW REQUIRED)
 #if(GLEW_FOUND)
-    include_directories(${GLEW_INCLUDE_DIR})
-    link_libraries(${GLEW_LIBRARY})
+    include_directories(${GLFW_INCLUDE_DIR})
+    link_libraries(${GLFW_LIBRARY})
 #endif()
 
 #find_package(GLM REQUIRED)
@@ -52,11 +57,11 @@ if(SDL2_FOUND)
     link_libraries(${SDL2_LIBRARY})
 endif()
 
-#find_package(Vulkan REQUIRED)
-#if(Vulkan_FOUND)
+find_package(VULKAN REQUIRED)
+if(VULKAN_FOUND)
     include_directories(${VULKAN_INCLUDE_DIR})
     link_libraries(${VULKAN_LIBRARY})
-#endif()
+endif()
 
 
 #find_package(X11_XCB)
@@ -68,8 +73,8 @@ endif()
 
 #find_package(SDL2_image REQUIRED)
 #if(SDL2_IMAGE_FOUND)
-    include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
-    link_libraries(${SDL2_IMAGE_LIBRARIES})
+    #include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
+    #link_libraries(${SDL2_IMAGE_LIBRARIES})
 #endif()
 #============== Link Dependancies ==============#
 
@@ -134,7 +139,7 @@ add_library(
 )
 
 # (${VOLK_PHETAMINE_LIBRARY_HEADER_FILES})
-target_link_libraries(${VOLK_PHETAMINE_LIBRARY_NAME} ${DENDY_FOUNDATION_LIBRARY_NAME} ${SDL2_LIBRARY})
+target_link_libraries(${VOLK_PHETAMINE_LIBRARY_NAME} ${DENDY_FOUNDATION_LIBRARY_NAME} ${SDL2_LIBRARY} ${GLFW_LIBRARY} ${VULKAN_LIBRARY})
 
 
 
@@ -202,7 +207,10 @@ target_compile_definitions(
          DENDYENGINE_MODE_DEBUG=1
          DENDYENGINE_PLATFORM_WINDOWS=1
          # DENDYENGINE_PLATFORM_LINUX=1
-         DENDYENGINE_VERSION_MAJOR=1
-         DENDYENGINE_VERSION_MINOR=0
-         DENDYENGINE_VERSION_PATCH=0
+		 DENDYENGINE_VERSION_MAJOR=${VERSION_MAJOR}
+         DENDYENGINE_VERSION_MINOR=${VERSION_MINOR}
+         DENDYENGINE_VERSION_PATCH=${VERSION_PATCH}
+         VOLKPHETAMINE_VERSION_MAJOR=${VOLK_PHETAMINE_LIBRARY_VERSION_MAJOR}
+         VOLKPHETAMINE_VERSION_MINOR=${VOLK_PHETAMINE_LIBRARY_VERSION_MINOR}
+         VOLKPHETAMINE_VERSION_PATCH=${VOLK_PHETAMINE_LIBRARY_VERSION_PATCH}
 )

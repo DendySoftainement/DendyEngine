@@ -1,4 +1,4 @@
-#include "VolkPhetamine/WindowHandle/SDLWindowHandle.h"
+#include "VolkPhetamine/WindowHandle/GLFWWindowHandle.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -15,9 +15,9 @@
 //// ---- Namespaces ---- ////
 namespace DendyEngine {
 
-	namespace VolkPhetamine {
+   namespace VolkPhetamine {
 
-		namespace WindowHandle {
+      namespace WindowHandle {
 
 //// - Defines and macro section - ////
 
@@ -40,9 +40,41 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void USDLWindowHandle::_initVulkan() {
+   void UGLFWWindowHandle::_initVulkan() {
    DENDYENGINE_CALLSTACK_ENTER;
-      
+      VkApplicationInfo appInfo = {};
+      appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+      appInfo.pApplicationName = "Hello Triangle";
+      appInfo.applicationVersion = VK_MAKE_VERSION(DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH);
+      appInfo.pEngineName = "No Engine";
+      appInfo.engineVersion = VK_MAKE_VERSION(VOLKPHETAMINE_VERSION_MAJOR, VOLKPHETAMINE_VERSION_MINOR, VOLKPHETAMINE_VERSION_PATCH);
+      appInfo.apiVersion = VK_API_VERSION_1_0;
+
+
+      VkInstanceCreateInfo createInfo = {};
+      createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+      createInfo.pApplicationInfo = &appInfo;
+
+
+      uint32_t glfwExtensionCount = 0;
+      const char** glfwExtensions;
+
+      glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+      createInfo.enabledExtensionCount = glfwExtensionCount;
+      createInfo.ppEnabledExtensionNames = glfwExtensions;
+
+
+      createInfo.enabledLayerCount = 0;
+
+
+      VkInstance instance;
+      VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+
+      if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+         DENDYENGINE_CRITICAL_ERROR("Failed to create a Vulkan instance");
+      }
+
    DENDYENGINE_CALLSTACK_EXIT;
    }
 
@@ -55,20 +87,21 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   USDLWindowHandle::USDLWindowHandle() {
+   UGLFWWindowHandle::UGLFWWindowHandle() {
    DENDYENGINE_CALLSTACK_ENTER;
-      // Initialize SDL's Video subsystem
-      if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		  DENDYENGINE_CRITICAL_ERROR("Unable to initialize SDL!");
-      }
-	DENDYENGINE_CALLSTACK_EXIT;
+      _initVulkan();
+      // Initialize GLFW's Video subsystem
+      glfwInit();
+   DENDYENGINE_CALLSTACK_EXIT;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   USDLWindowHandle::~USDLWindowHandle() {
-
+   UGLFWWindowHandle::~UGLFWWindowHandle() {
+   DENDYENGINE_CALLSTACK_ENTER;
+      glfwTerminate();
+   DENDYENGINE_CALLSTACK_EXIT;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,16 +135,19 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   USDLWindowHandle::SVulkanReadyWindow USDLWindowHandle::openWindow() {
+   UGLFWWindowHandle::SVulkanReadyWindow UGLFWWindowHandle::openWindow() {
    DENDYENGINE_CALLSTACK_ENTER;
       SVulkanReadyWindow windowBinding;
 
-      // Create our windows centered
-      windowBinding.window = SDL_CreateWindow("VolkPhetamine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+      glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+      glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+      windowBinding.window = glfwCreateWindow(800, 600, "VolkPhetamine", nullptr, nullptr);
+      
       if (windowBinding.window == nullptr) {
          DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
          exit(666);
-      }
+      }      
 
       return windowBinding;
    DENDYENGINE_CALLSTACK_EXIT;
@@ -120,8 +156,10 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void USDLWindowHandle::closeWindow(SVulkanReadyWindow a_window) {
-      // TODO
+   void UGLFWWindowHandle::closeWindow(SVulkanReadyWindow a_window) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      glfwDestroyWindow(a_window.window);
+   DENDYENGINE_CALLSTACK_EXIT;
    }
 
 //}
@@ -130,7 +168,7 @@ namespace DendyEngine {
 ////                                                                                                                                                        ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	  }
+      }
    }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
