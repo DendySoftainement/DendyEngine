@@ -73,7 +73,7 @@ namespace DendyEngine {
          //// ---- Members -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
-            SVulkanReadyWindow m_binding;
+            //SVulkanReadyWindow m_binding;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
@@ -94,7 +94,7 @@ namespace DendyEngine {
          //// ----   Core   ---- ////
             // \brief     None
             // \details   None
-            SVulkanReadyWindow openWindow();
+            SVulkanReadyWindow openWindow(dyUInt16 a_width, dyUInt16 a_height);
             void closeWindow(SVulkanReadyWindow window );
 
          };

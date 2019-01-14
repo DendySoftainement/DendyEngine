@@ -44,9 +44,9 @@ namespace DendyEngine {
    DENDYENGINE_CALLSTACK_ENTER;
       VkApplicationInfo appInfo = {};
       appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-      appInfo.pApplicationName = "Hello Triangle";
+      appInfo.pApplicationName = "Dendy Engine - Dendy Softainement";
       appInfo.applicationVersion = VK_MAKE_VERSION(DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH);
-      appInfo.pEngineName = "No Engine";
+      appInfo.pEngineName = "VolkPhetamine";
       appInfo.engineVersion = VK_MAKE_VERSION(VOLKPHETAMINE_VERSION_MAJOR, VOLKPHETAMINE_VERSION_MINOR, VOLKPHETAMINE_VERSION_PATCH);
       appInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -75,6 +75,12 @@ namespace DendyEngine {
          DENDYENGINE_CRITICAL_ERROR("Failed to create a Vulkan instance");
       }
 
+      glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+      printf( "glfw required extensions:\n" );
+      for (int i = 0; i < glfwExtensionCount; i++) {
+         printf( "\t %s\n", glfwExtensions[i] );
+      }
+
    DENDYENGINE_CALLSTACK_EXIT;
    }
 
@@ -92,6 +98,7 @@ namespace DendyEngine {
       _initVulkan();
       // Initialize GLFW's Video subsystem
       glfwInit();
+      m_openedWindows.resize(_MAX_OPENED_WINDOWS);
    DENDYENGINE_CALLSTACK_EXIT;
    }
 
@@ -135,22 +142,28 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   UGLFWWindowHandle::SVulkanReadyWindow UGLFWWindowHandle::openWindow() {
+   UGLFWWindowHandle::SVulkanReadyWindow UGLFWWindowHandle::openWindow(dyUInt16 a_width=800, dyUInt16 a_height=600) {
    DENDYENGINE_CALLSTACK_ENTER;
       SVulkanReadyWindow windowBinding;
 
       glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-      glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-      windowBinding.window = glfwCreateWindow(800, 600, "VolkPhetamine", nullptr, nullptr);
+      glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+      glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+      
+      windowBinding.window = glfwCreateWindow(a_width, a_height, "Dendy Engine - Dendy Softainement - VolkPhetamine", nullptr, nullptr);
       
       if (windowBinding.window == nullptr) {
          DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
          exit(666);
-      }      
+      }
 
-      return windowBinding;
+      glfwSetWindowUserPointer(windowBinding.window, this);
+      //glfwSetFramebufferSizeCallback(windowBinding.window, framebufferResizeCallback);
+
+      //m_openedWindows.append
+
    DENDYENGINE_CALLSTACK_EXIT;
+      return windowBinding;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
@@ -162,6 +175,25 @@ namespace DendyEngine {
    DENDYENGINE_CALLSTACK_EXIT;
    }
 
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   dyBool UGLFWWindowHandle::isCloseTriggered(SVulkanReadyWindow a_window) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      dyInt result = glfwWindowShouldClose(a_window.window);
+   DENDYENGINE_CALLSTACK_EXIT;
+      return result;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void UGLFWWindowHandle::gatherInputs() {
+   DENDYENGINE_CALLSTACK_ENTER;
+      glfwPollEvents();
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
+   
 //}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

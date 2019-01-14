@@ -102,12 +102,12 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   USDLWindowHandle::SVulkanReadyWindow USDLWindowHandle::openWindow() {
+   USDLWindowHandle::SVulkanReadyWindow USDLWindowHandle::openWindow(dyUInt16 a_width=800, dyUInt16 a_height=600) {
    DENDYENGINE_CALLSTACK_ENTER;
       SVulkanReadyWindow windowBinding;
 
       // Create our windows centered
-      windowBinding.window = SDL_CreateWindow("VolkPhetamine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN);
+      windowBinding.window = SDL_CreateWindow("VolkPhetamine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, a_width, a_height, SDL_WINDOW_SHOWN);
       if (windowBinding.window == nullptr) {
          DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
          exit(666);

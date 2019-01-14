@@ -21,12 +21,19 @@ int main( int argc, char** argv ) {
 
    DENDYENGINE_CRITICAL_ERROR("This is an error");
 
-   Sleep(3000);
+//   Sleep(1000);
 
    VolkPhetamine::WindowHandle::UGLFWWindowHandle* windowSystemManager = new VolkPhetamine::WindowHandle::UGLFWWindowHandle();
-   windowSystemManager->openWindow();
+   VolkPhetamine::WindowHandle::UGLFWWindowHandle::SVulkanReadyWindow mainWindow;
+   mainWindow = windowSystemManager->openWindow( 800,600 );
 
-   Sleep(3000);
+   while (windowSystemManager->isCloseTriggered( mainWindow ) == false) {
+      windowSystemManager->gatherInputs();
+   }
+
+   windowSystemManager->closeWindow( mainWindow );
+
+   //Sleep(30000);
 
    return EXIT_SUCCESS;
 }
