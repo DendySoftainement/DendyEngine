@@ -4,6 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //// - Standard includes section - ////
+#include <stdarg.h>
 
 //// - External includes section - ////
 
@@ -24,7 +25,7 @@ namespace DendyEngine {
          //// - Defines and macro section - ////
 
          //// - Using namespace shortcuts - ////
-         using namespace std;
+         //using namespace std;
 
          //// - Static const init section - ////
 
@@ -54,19 +55,26 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         dyString::dyString() {
-         DENDYENGINE_CALLSTACK_ENTER;
-            m_string = "";
-         DENDYENGINE_CALLSTACK_EXIT;
+         dyString::dyString():
+            m_string(""),
+            m_maxLen(0) {
+            /***/
+         }
+
+         dyString::dyString(dyString const& a_string):
+            m_string(a_string.m_string),
+            m_maxLen(a_string.m_maxLen) {
+            /***/
          }
 
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         dyString::dyString(dyUInt a_capacity) {
+         dyString::dyString(uint_fast16_t a_capacity):
+            m_maxLen(a_capacity) {
          DENDYENGINE_CALLSTACK_ENTER;
             m_string = "";
-            m_string.resize(a_capacity);
+            m_string.resize( a_capacity );
          DENDYENGINE_CALLSTACK_EXIT;
          }
 
@@ -75,7 +83,7 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          dyString::dyString(const char* a_string) {
          DENDYENGINE_CALLSTACK_ENTER;
-            m_string = string( a_string );
+            m_string = std::string(a_string);
          DENDYENGINE_CALLSTACK_EXIT;
          }
 
@@ -85,6 +93,7 @@ namespace DendyEngine {
          dyString::dyString(std::string a_string) {
          DENDYENGINE_CALLSTACK_ENTER;
             m_string = a_string;
+            m_maxLen = 0;
          DENDYENGINE_CALLSTACK_EXIT;
          }
 
@@ -94,8 +103,12 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         dyString &dyString::operator+(dyString const& a_string) {
+         dyString& dyString::operator+(dyString const& a_string) {
          DENDYENGINE_CALLSTACK_ENTER;
+            if (m_maxLen && a_string.m_string.length() + m_string.length() > m_maxLen) {
+               dyString Message = createFormatedString("Trying to add %d caracters to a string, while it's capacity is %d and already filled with %d caracters!", a_string.m_string.length(), m_maxLen, m_string.length());
+               DENDYENGINE_CRITICAL_ERROR( Message.asConstChar() );
+            }
             dyString result = m_string + a_string.m_string;
          DENDYENGINE_CALLSTACK_EXIT;
             return result;
@@ -104,8 +117,13 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         dyString &dyString::operator+(const char* a_string) {
+         dyString& dyString::operator+(const char* a_string) {
          DENDYENGINE_CALLSTACK_ENTER;
+            dyString otherString( a_string );
+            if (m_maxLen && otherString.m_string.length() + m_string.length() > m_maxLen) {
+               dyString Message = createFormatedString("Trying to add %d caracters to a string, while it's capacity is %d and already filled with %d caracters!", otherString.m_string.length(), m_maxLen, m_string.length());
+               DENDYENGINE_CRITICAL_ERROR(Message.asConstChar());
+            }
             dyString result = *this + dyString( a_string );
          DENDYENGINE_CALLSTACK_EXIT;
             return result;
@@ -114,7 +132,7 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         dyString &dyString::operator+(dyInt a_integer) {
+         dyString& dyString::operator+(int_fast32_t a_integer) {
          DENDYENGINE_CALLSTACK_ENTER;
             dyString result( std::to_string(a_integer) );
          DENDYENGINE_CALLSTACK_EXIT;
@@ -124,9 +142,9 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         dyString &dyString::operator+(dyFloat a_float) {
+         dyString& dyString::operator+(float a_float) {
          DENDYENGINE_CALLSTACK_ENTER;
-            dyString result(std::to_string(a_float));
+            dyString result( std::to_string(a_float) );
          DENDYENGINE_CALLSTACK_EXIT;
             return result;
          }
@@ -134,7 +152,7 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         dyString &dyString::operator+(dyBool a_boolean) {
+         dyString& dyString::operator+(bool a_boolean) {
          DENDYENGINE_CALLSTACK_ENTER;
             dyString result;
             if ( a_boolean )
@@ -150,9 +168,9 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         const dyBool &dyString::operator==(dyString const& a_string) {
+         dyBool const& dyString::operator==(dyString const& a_string) {
          DENDYENGINE_CALLSTACK_ENTER;
-            dyBool result = m_string.compare(a_string.m_string);
+            bool result = m_string.compare( a_string.m_string );
          DENDYENGINE_CALLSTACK_EXIT;
             return result;
          }
@@ -160,10 +178,10 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         const dyBool &dyString::operator==(const char* a_string) {
+         dyBool const& dyString::operator==(const char* a_string) {
          DENDYENGINE_CALLSTACK_ENTER;
             dyString otherString(a_string);
-            dyBool result = m_string.compare(otherString.m_string);
+            bool result = m_string.compare( otherString.m_string );
          DENDYENGINE_CALLSTACK_EXIT;
             return result;
          }
@@ -177,6 +195,17 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
+         dyString& dyString::createFormatedString(const char* a_string, ...) {
+         DENDYENGINE_CALLSTACK_ENTER;
+            char tmpBuffer[512];
+            va_list args;
+            va_start(args, a_string);
+            vsprintf_s(tmpBuffer, a_string, args);
+            va_end(args);
+            dyString newString(tmpBuffer);
+         DENDYENGINE_CALLSTACK_EXIT;
+            return newString;
+         }
 
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,7 +243,7 @@ namespace DendyEngine {
          const char* dyString::asNewConstChar() {
          DENDYENGINE_CALLSTACK_ENTER;
             char* pResult = new char[m_string.length()+1];
-            strcpy(pResult, m_string.c_str());
+            strncpy_s(pResult, m_string.length(), m_string.c_str(), m_string.length());
          DENDYENGINE_CALLSTACK_EXIT;
             return pResult;
          }
@@ -225,7 +254,7 @@ namespace DendyEngine {
          char* dyString::asNewChar() {
          DENDYENGINE_CALLSTACK_ENTER;
             char* pResult = new char[m_string.length() + 1];
-            strcpy(pResult, m_string.c_str());
+            strncpy_s(pResult, m_string.length(), m_string.c_str(), m_string.length());
          DENDYENGINE_CALLSTACK_EXIT;
             return pResult;
          }
@@ -236,9 +265,9 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         const dyBool dyString::find(dyString const& a_toFind) {
+         dyBool const& dyString::find(dyString const& a_toFind) {
          DENDYENGINE_CALLSTACK_ENTER;
-            dyBool result = m_string.find(a_toFind.m_string);
+            bool result = m_string.find(a_toFind.m_string);
          DENDYENGINE_CALLSTACK_EXIT;
             return result;
          }
@@ -246,10 +275,10 @@ namespace DendyEngine {
          //----------------------------------------------------------------------------------------------------------------------------------------//
          //
          //----------------------------------------------------------------------------------------------------------------------------------------//
-         const dyBool dyString::find(const char* a_toFind) {
+         dyBool const& dyString::find(const char* a_toFind) {
          DENDYENGINE_CALLSTACK_ENTER;
             dyString otherString( a_toFind );
-            dyBool result = m_string.find(otherString.m_string);
+            bool result = m_string.find(otherString.m_string);
          DENDYENGINE_CALLSTACK_EXIT;
             return result;
          }
@@ -265,7 +294,7 @@ namespace DendyEngine {
             std::string newString = "";
             std::string oldString = m_string;
             std::size_t pos = oldString.find( a_toFind.m_string );
-            while ( pos != string::npos ) {
+            while ( pos != std::string::npos ) {
                newString += oldString.substr( 0, pos ) += a_newValue.m_string;
                oldString = oldString.substr( pos );
                pos = oldString.find( a_toFind.m_string );
@@ -287,9 +316,9 @@ namespace DendyEngine {
          //////// -- Substring -- ////////
 
          /// \brief Eis phokoowin scheit gonna work as a python substring [2:-1]
-         dyString dyString::substring(dyInt a_begin, dyInt a_end) {
+         dyString const& dyString::substring(int_fast16_t a_begin, int_fast16_t a_end) {
          DENDYENGINE_CALLSTACK_ENTER;
-            dyInt realEnd = a_end;
+            uint_fast16_t realEnd = a_end;
             if ( a_end <= 0 ) {
                realEnd = m_string.length() + a_end;
             }

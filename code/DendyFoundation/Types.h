@@ -25,6 +25,7 @@
 #include <memory>
 #include <map>
 #include <sstream>
+#include "DendyFoundation/CustomTypes/DyString.h"
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Specific to 'WINDOWS' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 #ifdef DENDYENGINE_PLATFORM_WINDOWS
    #include <stdint.h> ///< Using [basictype]_fast[minsize]_t
@@ -34,6 +35,8 @@
 //// - External includes section - ////
 #define GLM_FORCE_RADIANS
 #include <glm/gtc/type_ptr.hpp>
+
+class DendyEngine::DendyFoundation::CustomTypes::dyString;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +59,8 @@ namespace DendyEngine {
    using dyFloat = float;           /// Signed 32b floating-point
    using dyFloat64 = double;        /// Signed 64b floating-point
 
-   using dyString = std::string;
+   using dyString = DendyEngine::DendyFoundation::CustomTypes::dyString;
+
    template<class T, class U>
    using dyMap = std::map<T, U>;
    template<class T>
@@ -85,6 +89,7 @@ namespace DendyEngine {
 #endif
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+   /*
    template<class T>
    dyBool is_lexically_castable( dyString const& a_string ) {
    	std::stringstream ss(a_string);
@@ -101,6 +106,7 @@ namespace DendyEngine {
    	ss >> result;
    	return result;
    }
+   */
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
