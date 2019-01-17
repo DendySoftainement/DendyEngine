@@ -22,9 +22,10 @@
 //// - Standard includes section - ////
 
 //// - External includes section - ////
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
-//#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.h>
 
 //// -Foundation includes section- ////
 #include "DendyFoundation/Types.h"
@@ -72,11 +73,14 @@ namespace DendyEngine {
          //// ---- Members -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
-            SVulkanReadyWindow m_binding;
+            //SVulkanReadyWindow m_binding;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         private:
+         //// ---- Internal ---- ////
+            void _initVulkan();
          public:
          //// ----  Object  ---- ////
             USDLWindowHandle();
@@ -90,7 +94,7 @@ namespace DendyEngine {
          //// ----   Core   ---- ////
             // \brief     None
             // \details   None
-            SVulkanReadyWindow openWindow();
+            SVulkanReadyWindow openWindow(dyUInt16 a_width, dyUInt16 a_height);
             void closeWindow(SVulkanReadyWindow window );
 
          };

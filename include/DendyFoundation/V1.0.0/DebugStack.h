@@ -31,6 +31,8 @@
 //// - Internal includes section - ////
 
 //// - Defines and macro section - ////
+//#undef DENDYENGINE_MODE_DEBUG
+
 #ifndef _DENDYENGINE_DEFINEGUARD_DEBUG_SYSTEM
 
    // Double macro to display the number of the line instead of "__LINE__"
@@ -60,11 +62,11 @@
       #define DENDYENGINE_ERROR(message)          (&DendyEngine::DendyFoundation::DebugTools::UDebugStack::getInstance())->error(message,_DENDYENGINE_LOCATION)
       #define DENDYENGINE_CRITICAL_ERROR(message) (&DendyEngine::DendyFoundation::DebugTools::UDebugStack::getInstance())->criticalError(message,_DENDYENGINE_LOCATION)
    #else
-      #define DENDYENGINE_CALLSTACK_ENTER         (/***/)
-      #define DENDYENGINE_CALLSTACK_EXIT          (/***/)
-      #define DENDYENGINE_LOG(message)            (/***/)
-      #define DENDYENGINE_ERROR(message)          (/***/)
-      #define DENDYENGINE_CRITICAL_ERROR(message) (/***/)
+      #define DENDYENGINE_CALLSTACK_ENTER         /***/
+      #define DENDYENGINE_CALLSTACK_EXIT          /***/
+      #define DENDYENGINE_LOG(message)            /***/
+      #define DENDYENGINE_ERROR(message)          /***/
+      #define DENDYENGINE_CRITICAL_ERROR(message) /***/
    #endif
    ////////////////////////////////////////////////////////////
 
@@ -97,19 +99,19 @@ namespace DendyEngine {
                DY_END,
                DY_LOG,
                DY_ERROR,
-			   DY_CRITICAL_ERROR
+			      DY_CRITICAL_ERROR
             };
 
             struct SCodeLocation {
-               dyString fileStr;
-               dyString functionStr;
-               dyString lineStr;
-               SCodeLocation( dyString rawLocationStr = "" );
+               std::string fileStr;
+               std::string functionStr;
+               std::string lineStr;
+               SCodeLocation(std::string rawLocationStr = "" );
             };
 
             struct SDebugEvent {
                EEventType    type;
-               dyString      messageStr;
+               std::string   messageStr;
                SCodeLocation context;
                SDebugEvent():
                   type( EEventType::DY_LOG ),
@@ -143,11 +145,11 @@ namespace DendyEngine {
          //// ---- Accessor ---- ////
 
          //// ----   Core   ---- ////
-            void enter( dyString locationStr );
-            void log( dyString messageStr, dyString locationStr );
+            void enter( std::string locationStr );
+            void log( std::string messageStr, std::string locationStr );
             void exit();
-            void error( dyString messageStr, dyString locationStr );
-            void criticalError( dyString messageStr, dyString locationStr );
+            void error( std::string messageStr, std::string locationStr );
+            void criticalError( std::string messageStr, std::string locationStr );
 
          };
 
