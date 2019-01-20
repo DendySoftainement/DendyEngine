@@ -53,8 +53,7 @@ namespace DendyEngine {
    using dyInt32 = int32_t;         /// Signed 32b integer [-2 147 483 648,  2 147 483 647] STRICT (usefull for third party libs)
    using dyUInt32 = uint32_t;       /// Unsigned 32b integer [0,  4 294 967 295] STRICT (usefull for third party libs)
    using dyUInt = uint_fast32_t;    /// Unsigned 32b integer [0,  4 294 967 295] at least! (can be more if faster on system)
-   using dyInt64 = int_fast64_t;    /// Signed 64b integer [-9 223 372 036 854 775 808,  9 223 372 036 854 775 807] at least! (can be more if faster
-                                    ///    on system)
+   using dyInt64 = int_fast64_t;    /// Signed 64b integer [-9 223 372 036 854 775 808,  9 223 372 036 854 775 807] at least! (can be more if faster on system)
    using dyUInt64 = uint_fast64_t;  /// Unsigned 64b integer [0,  18 446 744 073 709 551 615] at least! (can be more if faster on system)
    using dyFloat = float;           /// Signed 32b floating-point
    using dyFloat64 = double;        /// Signed 64b floating-point

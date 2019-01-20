@@ -50,75 +50,73 @@ namespace DendyEngine {
 
       namespace CustomTypes {
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-         ////   Class CMyClass                                                                                                                                       ////
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////   Class CMyClass                                                                                                                                       ////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
          class dyString {
 
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //// ---- Enum/Struct/Constants -----                                                                                                   ////
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         //// ---- Enum/Struct/Constants -----                                                                                                   ////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          public:
 
 
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //// ---- Members -----                                                                                                                 ////
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         //// ---- Members -----                                                                                                                 ////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
-            std::string m_string;
-            uint_fast16_t m_maxLen;
+            std::string m_string{ "" };
 
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //// ---- Methods -----                                                                                                                 ////
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         //// ---- Methods -----                                                                                                                 ////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
-            //// ---- Internal ---- ////
+         //// ---- Internal ---- ////
 
          public:
-            //// ----  Object  ---- ////
-            dyString();
-            dyString(dyString const& a_string);
-            dyString(uint_fast16_t a_capacity);
-            dyString(const char* a_string);
-            dyString(std::string a_string);
-            dyString& operator+(dyString const& a_string);
-            dyString& operator+(const char* a_string);
-            dyString& operator+(int_fast32_t a_integer);
-            dyString& operator+(float a_float);
-            dyString& operator+(bool a_boolean);
-            bool const& operator==(dyString const& a_string);
-            bool const& operator==(const char* a_string);
+         //// ----  Object  ---- ////
+            dyString( );
+            dyString( dyString const& a_string );
+            dyString( uint_fast16_t a_capacity );
+            dyString( const char* a_string, ... );
+            dyString( std::string a_string );
+            dyString& operator+( dyString const& a_string );
+            dyString& operator+( const char* a_string );
+            dyString& operator+( int_fast32_t a_integer );
+            dyString& operator+( float a_float );
+            dyString& operator+( bool a_boolean );
+            bool const& operator==( dyString const& a_string ) const;
+            bool const& operator==( const char* a_string ) const;
+            operator bool( ) const;
 
          private:
-            //// ----  Forbid  ---- ////
+         //// ----  Forbid  ---- ////
 
          public:
-            //// ----  Static  ---- ////
-            static dyString& createFormatedString( const char* a_string, ... );
+         //// ----  Static  ---- ////
 
-            //// ---- Accessor ---- ////
+         //// ---- Accessor ---- ////
 
-            //// ----   Core   ---- ////
-            const char* asConstChar();
-            const char* asNewConstChar();
-            char* asNewChar();
-            std::string asStdString() { return m_string; }
+         //// ----   Core   ---- ////
+            const char* asConstChar( ) const;
+            char* asNewChar( ) const;
+            std::string asStdString( ) const { return m_string; }
 
-            bool const& find(dyString const& a_toFind);
-            bool const& find(const char* a_toFind);
+            bool const& find( dyString const& a_toFind ) const;
+            bool const& find( const char* a_toFind ) const;
 
-            void replace(dyString const& a_toFind, dyString const& a_newValue);
-            void replace(const char* a_toFind, const char* a_newValue);
+            void replace( dyString const& a_toFind, dyString const& a_newValue );
+            void replace( const char* a_toFind, const char* a_newValue );
 
             /// \brief Eis phokoowin scheit gonna work as a python substring too [2:-1]
-            dyString const& substring(int_fast16_t a_begin, int_fast16_t a_end);
+            dyString const& substring( int_fast16_t a_begin, int_fast16_t a_end ) const;
 
          };
 
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-         ////                                                                                                                                                        ////
-         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////                                                                                                                                                        ////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
       }
    }

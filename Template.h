@@ -79,6 +79,7 @@ namespace DendyEngine {
          private:
          //// ----  Forbid  ---- ////
 			
+		 public:
          //// ----   Core   ---- ////
 			
 

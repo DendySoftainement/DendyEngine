@@ -12,6 +12,8 @@
 
 //// - Internal includes section - ////
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //// ---- Namespaces ---- ////
 namespace DendyEngine {
 
@@ -19,17 +21,16 @@ namespace DendyEngine {
 
       namespace WindowHandle {
 
-//// - Defines and macro section - ////
+         //// - Defines and macro section - ////
 
-//// - Using namespace shortcuts - ////
+         //// - Using namespace shortcuts - ////
 
+         //// - Static const init section - ////
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// USDLWindowHandle
-//{
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    ////  ================================================================================================================================  ////
    ////    ---- Internal methods -----                                                                                                     ////
@@ -39,18 +40,18 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void UGLFWWindowHandle::_initVulkan() {
-   DENDYENGINE_CALLSTACK_ENTER;
-      VkApplicationInfo appInfo = {};
+   void UGLFWWindowHandle::_initVulkan( ) {
+      DENDYENGINE_CALLSTACK_ENTER;
+      VkApplicationInfo appInfo = { };
       appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
       appInfo.pApplicationName = "Dendy Engine - Dendy Softainement";
-      appInfo.applicationVersion = VK_MAKE_VERSION(DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH);
+      appInfo.applicationVersion = VK_MAKE_VERSION( DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH );
       appInfo.pEngineName = "VolkPhetamine";
-      appInfo.engineVersion = VK_MAKE_VERSION(VOLKPHETAMINE_VERSION_MAJOR, VOLKPHETAMINE_VERSION_MINOR, VOLKPHETAMINE_VERSION_PATCH);
+      appInfo.engineVersion = VK_MAKE_VERSION( VOLKPHETAMINE_VERSION_MAJOR, VOLKPHETAMINE_VERSION_MINOR, VOLKPHETAMINE_VERSION_PATCH );
       appInfo.apiVersion = VK_API_VERSION_1_0;
 
 
-      VkInstanceCreateInfo createInfo = {};
+      VkInstanceCreateInfo createInfo = { };
       createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
       createInfo.pApplicationInfo = &appInfo;
 
@@ -58,7 +59,7 @@ namespace DendyEngine {
       uint32_t glfwExtensionCount = 0;
       const char** glfwExtensions;
 
-      glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+      glfwExtensions = glfwGetRequiredInstanceExtensions( &glfwExtensionCount );
 
       createInfo.enabledExtensionCount = glfwExtensionCount;
       createInfo.ppEnabledExtensionNames = glfwExtensions;
@@ -68,19 +69,19 @@ namespace DendyEngine {
 
 
       VkInstance instance;
-      VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+      VkResult result = vkCreateInstance( &createInfo, nullptr, &instance );
 
-      if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
-         DENDYENGINE_CRITICAL_ERROR("Failed to create a Vulkan instance");
+      if ( vkCreateInstance( &createInfo, nullptr, &instance ) != VK_SUCCESS ) {
+         DENDYENGINE_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
       }
 
-      glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+      glfwExtensions = glfwGetRequiredInstanceExtensions( &glfwExtensionCount );
       printf( "glfw required extensions:\n" );
-      for (int i = 0; i < glfwExtensionCount; i++) {
+      for ( int i = 0; i < glfwExtensionCount; i++ ) {
          printf( "\t %s\n", glfwExtensions[i] );
       }
 
-   DENDYENGINE_CALLSTACK_EXIT;
+      DENDYENGINE_CALLSTACK_EXIT;
    }
 
 
@@ -93,22 +94,22 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   UGLFWWindowHandle::UGLFWWindowHandle() {
-   DENDYENGINE_CALLSTACK_ENTER;
-      _initVulkan();
+   UGLFWWindowHandle::UGLFWWindowHandle( ) {
+      DENDYENGINE_CALLSTACK_ENTER;
+      _initVulkan( );
       // Initialize GLFW's Video subsystem
-      glfwInit();
+      glfwInit( );
       m_openedWindows.resize( MAX_OPENED_WINDOWS );
-   DENDYENGINE_CALLSTACK_EXIT;
+      DENDYENGINE_CALLSTACK_EXIT;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   UGLFWWindowHandle::~UGLFWWindowHandle() {
-   DENDYENGINE_CALLSTACK_ENTER;
-      glfwTerminate();
-   DENDYENGINE_CALLSTACK_EXIT;
+   UGLFWWindowHandle::~UGLFWWindowHandle( ) {
+      DENDYENGINE_CALLSTACK_ENTER;
+      glfwTerminate( );
+      DENDYENGINE_CALLSTACK_EXIT;
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,64 +143,64 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   UGLFWWindowHandle::SVulkanReadyWindow UGLFWWindowHandle::openWindow(Configuration const& a_config) {
-   DENDYENGINE_CALLSTACK_ENTER;
+   UGLFWWindowHandle::SVulkanReadyWindow UGLFWWindowHandle::openWindow( SConfiguration const& a_config ) {
+      DENDYENGINE_CALLSTACK_ENTER;
 
       m_config = a_config;
 
       SVulkanReadyWindow windowBinding;
 
-      glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+      glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API );
       //glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-      if (m_config.without_borders)
-         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+      if ( m_config.without_borders )
+         glfwWindowHint( GLFW_DECORATED, GLFW_FALSE );
       else
-         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+         glfwWindowHint( GLFW_DECORATED, GLFW_TRUE );
 
-      windowBinding.window = glfwCreateWindow(m_config.width, m_config.height, m_config.caption.asConstChar(), nullptr, nullptr);
+      windowBinding.window = glfwCreateWindow( m_config.width, m_config.height, m_config.caption.asConstChar( ), nullptr, nullptr );
 
-      if (windowBinding.window == nullptr) {
-         DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
-         exit(666);
+      if ( windowBinding.window == nullptr ) {
+         DENDYENGINE_CRITICAL_ERROR( "Unable to create the window!" );
+         exit( 666 );
       }
 
-      glfwSetWindowUserPointer(windowBinding.window, this);
+      glfwSetWindowUserPointer( windowBinding.window, this );
       //glfwSetFramebufferSizeCallback(windowBinding.window, framebufferResizeCallback);
 
       //m_openedWindows.append
 
-   DENDYENGINE_CALLSTACK_EXIT;
+      DENDYENGINE_CALLSTACK_EXIT;
       return windowBinding;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void UGLFWWindowHandle::closeWindow(SVulkanReadyWindow a_window) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      glfwDestroyWindow(a_window.window);
-   DENDYENGINE_CALLSTACK_EXIT;
+   void UGLFWWindowHandle::closeWindow( SVulkanReadyWindow a_window ) {
+      DENDYENGINE_CALLSTACK_ENTER;
+      glfwDestroyWindow( a_window.window );
+      DENDYENGINE_CALLSTACK_EXIT;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyBool UGLFWWindowHandle::isCloseTriggered(SVulkanReadyWindow a_window) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      dyBool result = glfwWindowShouldClose(a_window.window) > 0;
-   DENDYENGINE_CALLSTACK_EXIT;
+   dyBool UGLFWWindowHandle::isCloseTriggered( SVulkanReadyWindow a_window ) {
+      DENDYENGINE_CALLSTACK_ENTER;
+      dyBool result = glfwWindowShouldClose( a_window.window ) > 0;
+      DENDYENGINE_CALLSTACK_EXIT;
       return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void UGLFWWindowHandle::gatherInputs() {
-   DENDYENGINE_CALLSTACK_ENTER;
-      glfwPollEvents();
-   DENDYENGINE_CALLSTACK_EXIT;
+   void UGLFWWindowHandle::gatherInputs( ) {
+      DENDYENGINE_CALLSTACK_ENTER;
+      glfwPollEvents( );
+      DENDYENGINE_CALLSTACK_EXIT;
    }
-   
+
 //}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

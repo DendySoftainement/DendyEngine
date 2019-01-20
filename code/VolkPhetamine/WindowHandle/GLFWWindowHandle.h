@@ -56,18 +56,18 @@ namespace DendyEngine {
 ////   Class CMyClass                                                                                                                                       ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         class UGLFWWindowHandle : public IWindowHandle<GLFWwindow> {
+         class UGLFWWindowHandle: public IWindowHandle<GLFWwindow> {
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Enum/Struct/Constants -----                                                                                                   ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          public:
 
-            struct Configuration {
-               dyUInt16 width           { 800 };
-               dyUInt16 height          { 600 };
-               dyBool   without_borders { false };
-               dyString caption         { "" };
+            struct SConfiguration {
+               dyUInt16 width             { 800 };
+               dyUInt16 height            { 600 };
+               dyBool   without_borders   { false };
+               dyString caption           { "" };
             };
 
             static const dyUInt16 MAX_OPENED_WINDOWS = 64;
@@ -77,19 +77,19 @@ namespace DendyEngine {
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
             dyVec<SVulkanReadyWindow> m_openedWindows;
-            Configuration m_config;
+            SConfiguration m_config;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
          //// ---- Internal ---- ////
-            void _initVulkan();
+            void _initVulkan( );
 
          public:
          //// ----  Object  ---- ////
-            UGLFWWindowHandle();
-            ~UGLFWWindowHandle();
+            UGLFWWindowHandle( );
+            ~UGLFWWindowHandle( );
 
          private:
          //// ----  Forbid  ---- ////
@@ -102,10 +102,10 @@ namespace DendyEngine {
          //// ----   Core   ---- ////
          ///
          ///
-            SVulkanReadyWindow openWindow(Configuration const& a_config = Configuration());
-            void closeWindow(SVulkanReadyWindow window);
-            dyBool isCloseTriggered(SVulkanReadyWindow window);
-            void gatherInputs();
+            SVulkanReadyWindow openWindow( SConfiguration const& a_config = SConfiguration( ) );
+            void closeWindow( SVulkanReadyWindow window );
+            dyBool isCloseTriggered( SVulkanReadyWindow window );
+            void gatherInputs( );
 
          };
 
