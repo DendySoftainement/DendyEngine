@@ -21,9 +21,8 @@ namespace DendyEngine {
 
 //// - Defines and macro section - ////
 
-
 //// - Using namespace shortcuts - ////
-//using namespace DendyEngine::DendyFoundation::Types;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +83,7 @@ namespace DendyEngine {
    DENDYENGINE_CALLSTACK_EXIT;
    }
 
+
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    ////  ================================================================================================================================  ////
    ////    ---- Object oriented methods -----                                                                                              ////
@@ -98,7 +98,7 @@ namespace DendyEngine {
       _initVulkan();
       // Initialize GLFW's Video subsystem
       glfwInit();
-      m_openedWindows.resize(_MAX_OPENED_WINDOWS);
+      m_openedWindows.resize( MAX_OPENED_WINDOWS );
    DENDYENGINE_CALLSTACK_EXIT;
    }
 
@@ -142,16 +142,22 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   UGLFWWindowHandle::SVulkanReadyWindow UGLFWWindowHandle::openWindow(dyUInt16 a_width=800, dyUInt16 a_height=600) {
+   UGLFWWindowHandle::SVulkanReadyWindow UGLFWWindowHandle::openWindow(Configuration const& a_config) {
    DENDYENGINE_CALLSTACK_ENTER;
+
+      m_config = a_config;
+
       SVulkanReadyWindow windowBinding;
 
       glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-      glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-      glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-      
-      windowBinding.window = glfwCreateWindow(a_width, a_height, "Dendy Engine - Dendy Softainement - VolkPhetamine", nullptr, nullptr);
-      
+      //glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+      if (m_config.without_borders)
+         glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+      else
+         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+
+      windowBinding.window = glfwCreateWindow(m_config.width, m_config.height, m_config.caption.asConstChar(), nullptr, nullptr);
+
       if (windowBinding.window == nullptr) {
          DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
          exit(666);
@@ -180,7 +186,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyBool UGLFWWindowHandle::isCloseTriggered(SVulkanReadyWindow a_window) {
    DENDYENGINE_CALLSTACK_ENTER;
-      dyInt result = glfwWindowShouldClose(a_window.window);
+      dyBool result = glfwWindowShouldClose(a_window.window) > 0;
    DENDYENGINE_CALLSTACK_EXIT;
       return result;
    }

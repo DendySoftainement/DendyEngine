@@ -63,15 +63,21 @@ namespace DendyEngine {
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          public:
 
+            struct Configuration {
+               dyUInt16 width           { 800 };
+               dyUInt16 height          { 600 };
+               dyBool   without_borders { false };
+               dyString caption         { "" };
+            };
+
+            static const dyUInt16 MAX_OPENED_WINDOWS = 64;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Members -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
-            static const dyUInt16 _MAX_OPENED_WINDOWS = 64;
-
             dyVec<SVulkanReadyWindow> m_openedWindows;
-
+            Configuration m_config;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
@@ -94,9 +100,9 @@ namespace DendyEngine {
          //// ---- Accessor ---- ////
 
          //// ----   Core   ---- ////
-         // \brief     None
-         // \details   None
-            SVulkanReadyWindow openWindow(dyUInt16 a_width, dyUInt16 a_height);
+         ///
+         ///
+            SVulkanReadyWindow openWindow(Configuration const& a_config = Configuration());
             void closeWindow(SVulkanReadyWindow window);
             dyBool isCloseTriggered(SVulkanReadyWindow window);
             void gatherInputs();

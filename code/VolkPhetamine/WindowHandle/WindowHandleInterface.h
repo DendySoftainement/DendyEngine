@@ -68,7 +68,7 @@ namespace DendyEngine {
          VkSurfaceKHR*   vulkanSurface;
          TWindowHandle*  window;
       };
-
+      
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    //// ---- Members -----                                                                                                                 ////
@@ -85,7 +85,7 @@ namespace DendyEngine {
      // virtual ~IWindowHandle() = 0;
 
    //// ----   Core   ---- ////
-      virtual SVulkanReadyWindow openWindow(dyUInt16 a_width, dyUInt16 a_height) = 0;
+      //virtual SVulkanReadyWindow openWindow(dyUInt16 a_width, dyUInt16 a_height) = 0;
       virtual void closeWindow( SVulkanReadyWindow window ) = 0;
 
    };

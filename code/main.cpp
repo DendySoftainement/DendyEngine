@@ -5,6 +5,8 @@
 #include "DendyFoundation/Types.h"
 #include "DendyFoundation/DebugTools/DebugStack.h"
 #include "VolkPhetamine/WindowHandle/GLFWWindowHandle.h"
+#include "VolkPhetamine/WindowHandle/WindowHandleInterface.h"
+
 
 using namespace DendyEngine;
 //using namespace DendyEngine::DendyFoundation::CustomTypes;
@@ -23,21 +25,30 @@ int main( int argc, char** argv ) {
    dyString myString = "Hello world";
    printf("%s\n", myString.asConstChar());
 
-   DENDYENGINE_CRITICAL_ERROR("This is an error");
+   //DENDYENGINE_CRITICAL_ERROR("This is an error");
 
-//   Sleep(1000);
 
-   /*VolkPhetamine::WindowHandle::UGLFWWindowHandle* windowSystemManager = new VolkPhetamine::WindowHandle::UGLFWWindowHandle();
+   VolkPhetamine::WindowHandle::UGLFWWindowHandle* windowSystemManager = new VolkPhetamine::WindowHandle::UGLFWWindowHandle();
    VolkPhetamine::WindowHandle::UGLFWWindowHandle::SVulkanReadyWindow mainWindow;
-   mainWindow = windowSystemManager->openWindow( 800,600 );
+   VolkPhetamine::WindowHandle::UGLFWWindowHandle::Configuration mainWindowConfig;
+   mainWindowConfig.without_borders = true;
+   mainWindowConfig.caption = "This is the main window";
+   mainWindow = windowSystemManager->openWindow( );
 
-   while (windowSystemManager->isCloseTriggered( mainWindow ) == false) {
+   VolkPhetamine::WindowHandle::UGLFWWindowHandle::SVulkanReadyWindow secondWindow;
+   secondWindow = windowSystemManager->openWindow( mainWindowConfig );
+
+   VolkPhetamine::WindowHandle::UGLFWWindowHandle::SVulkanReadyWindow thirdWindow;
+   thirdWindow = windowSystemManager->openWindow( mainWindowConfig );
+
+
+   while (windowSystemManager->isCloseTriggered(mainWindow) == false) {
       windowSystemManager->gatherInputs();
    }
 
-   windowSystemManager->closeWindow( mainWindow );*/
+   windowSystemManager->closeWindow( mainWindow );
 
-   Sleep(30000);
+   //Sleep(30000);
    DENDYENGINE_CALLSTACK_EXIT;
    return EXIT_SUCCESS;
 }
