@@ -294,7 +294,7 @@ namespace DendyEngine {
    /// \brief Eis phokoowin scheit gonna work as a python substring [2:-1]
    dyString const& dyString::substring( int_fast16_t a_begin, int_fast16_t a_end ) const {
    DENDYENGINE_CALLSTACK_ENTER;
-      uint_fast16_t realEnd = a_end;
+      dyUInt64 realEnd = a_end;
       if ( a_end <= 0 ) {
          realEnd = m_string.length( ) + a_end;
       }

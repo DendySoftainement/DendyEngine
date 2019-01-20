@@ -58,9 +58,9 @@ namespace DendyEngine {
    USDLWindowHandle::USDLWindowHandle() {
    DENDYENGINE_CALLSTACK_ENTER;
       // Initialize SDL's Video subsystem
-      if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+      /*if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		  DENDYENGINE_CRITICAL_ERROR("Unable to initialize SDL!");
-      }
+      }*/
 	DENDYENGINE_CALLSTACK_EXIT;
    }
 
@@ -107,11 +107,11 @@ namespace DendyEngine {
       SVulkanReadyWindow windowBinding;
 
       // Create our windows centered
-      windowBinding.window = SDL_CreateWindow("VolkPhetamine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, a_width, a_height, SDL_WINDOW_SHOWN);
+      /*windowBinding.window = SDL_CreateWindow("VolkPhetamine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, a_width, a_height, SDL_WINDOW_SHOWN);
       if (windowBinding.window == nullptr) {
          DENDYENGINE_CRITICAL_ERROR("Unable to create the window!");
          exit(666);
-      }
+      }*/
 
       return windowBinding;
    DENDYENGINE_CALLSTACK_EXIT;

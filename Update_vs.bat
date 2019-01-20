@@ -1,5 +1,5 @@
 rmdir /s /q build
 mkdir build
 cd build
-cmake ..
+cmake .. -G "Visual Studio 14 Win64"
 pause

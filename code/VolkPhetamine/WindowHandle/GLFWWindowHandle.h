@@ -78,13 +78,21 @@ namespace DendyEngine {
          private:
             dyVec<SVulkanReadyWindow> m_openedWindows;
             SConfiguration m_config;
+            // Vulkan related folks
+            VkInstance m_vulkanInstance;
+            VkDevice m_vulkanDevice;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
          //// ---- Internal ---- ////
-            void _initVulkan( );
+            void _setupDisplay( );
+            void _createVkInstance( );
+            void _getGlfwExtensionsForVk( const char* const** a_requiredExtensions, dyUInt& a_requiredExtensionsCount );
+            void _createVkDevice( );
+            void _initGlfw( );
+            
 
          public:
          //// ----  Object  ---- ////
