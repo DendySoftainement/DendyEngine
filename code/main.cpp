@@ -5,8 +5,8 @@
 #include "DendyFoundation/Types.h"
 #include "DendyFoundation/DebugTools/DebugStack.h"
 #include "DendyFoundation/DebugTools/Timer.h"
-#include "VolkPhetamine/WindowHandle/GLFWWindowHandle.h"
-#include "VolkPhetamine/WindowHandle/WindowHandleInterface.h"
+#include "PixPhetamine/WindowHandle/GLFWWindowHandle.h"
+#include "PixPhetamine/WindowHandle/WindowHandleInterface.h"
 
 
 using namespace DendyEngine;
@@ -34,9 +34,9 @@ int main( int argc, char** argv ) {
    printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );
 
 
-   VolkPhetamine::WindowHandle::UGLFWWindowHandle* windowSystemManager = new VolkPhetamine::WindowHandle::UGLFWWindowHandle( );
-   VolkPhetamine::WindowHandle::UGLFWWindowHandle::SVulkanReadyWindow mainWindow, secondWindow, thirdWindow;
-   VolkPhetamine::WindowHandle::UGLFWWindowHandle::SConfiguration mainWindowConfig;
+   PixPhetamine::WindowHandle::UGLFWWindowHandle* windowSystemManager = new PixPhetamine::WindowHandle::UGLFWWindowHandle( );
+   PixPhetamine::WindowHandle::UGLFWWindowHandle::SVulkanReadyWindow mainWindow, secondWindow, thirdWindow;
+   PixPhetamine::WindowHandle::UGLFWWindowHandle::SConfiguration mainWindowConfig;
    mainWindowConfig.without_borders = true;
    mainWindowConfig.caption = "This is the main window";
    mainWindow = windowSystemManager->openWindow( );
