@@ -40,7 +40,7 @@ namespace DendyEngine {
          return;
       }
       std::string infoStr = a_rawLocationStr;
-      dyInt pos = infoStr.find("\\code\\");
+      dyUInt64 pos = infoStr.find("\\code\\");
       infoStr = infoStr.substr(pos+6);
       pos = infoStr.find("#");
       this->fileStr = infoStr.substr(0, pos);
