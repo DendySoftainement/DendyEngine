@@ -1,2 +1,2 @@
-cmake --build . --config Debug
+cmake --build . --target INSTALL --config Debug
 pause

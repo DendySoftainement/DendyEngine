@@ -44,7 +44,7 @@ namespace DendyEngine {
       vkAppConfiguration.pApplicationName = "Dendy Engine - Dendy Softainement";
       vkAppConfiguration.applicationVersion = VK_MAKE_VERSION( DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH );
       vkAppConfiguration.pEngineName = "PixPhetamine";
-      vkAppConfiguration.engineVersion = VK_MAKE_VERSION( PIXPHETAMINE_VERSION_MAJOR, PIXPHETAMINE_VERSION_MINOR, PIXPHETAMINE_VERSION_PATCH );
+      //vkAppConfiguration.engineVersion = VK_MAKE_VERSION( PIXPHETAMINE_VERSION_MAJOR, PIXPHETAMINE_VERSION_MINOR, PIXPHETAMINE_VERSION_PATCH );
       vkAppConfiguration.apiVersion = VK_API_VERSION_1_0;
 
 

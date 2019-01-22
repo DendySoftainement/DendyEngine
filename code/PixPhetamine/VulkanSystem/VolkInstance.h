@@ -16,6 +16,7 @@
 //// - Standard includes section - ////
 
 //// - External includes section - ////
+#include <vulkan/vulkan.h>
 
 //// -Foundation includes section- ////
 #include "DendyFoundation/Types.h"
@@ -54,13 +55,15 @@ namespace DendyEngine {
          //// ---- Enum/Struct/Constants -----                                                                                                   ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          public:
-			
+            static dyUInt instancesCount;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Members -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
-			
+            VkInstance m_vulkanInstance;
+            dyVec<dyString> m_supportedExtensionsVec;
+            dyVec<dyString> m_validationLayersVec;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
@@ -71,7 +74,13 @@ namespace DendyEngine {
 
          public:
          //// ----  Object  ---- ////
-            CVolkInstance();
+            CVolkInstance( 
+                  dyVec<dyString> const& a_supportedExtensionsVec,
+                  dyString const& a_programName = "PixPhetamine",
+                  dyUInt a_programVersionMajor = 1,
+                  dyUInt a_programVersionMinor = 0,
+                  dyUInt a_programVersionPatch = 0 
+            );
             ~CVolkInstance();
 			
 		   //// ----  Static  ---- ////
@@ -79,7 +88,7 @@ namespace DendyEngine {
          private:
          //// ----  Forbid  ---- ////
 			
-		 public:
+		   public:
          //// ----   Core   ---- ////
 			
 

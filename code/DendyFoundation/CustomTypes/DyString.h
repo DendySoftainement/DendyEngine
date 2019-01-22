@@ -81,6 +81,11 @@ namespace DendyEngine {
             dyString( uint_fast16_t a_capacity );
             dyString( const char* a_string, ... );
             dyString( std::string a_string );
+            void operator+=( dyString const& a_string );
+            void operator+=( const char* a_string );
+            void operator+=( int_fast32_t a_integer );
+            void operator+=( float a_float );
+            void operator+=( bool a_boolean );
             dyString& operator+( dyString const& a_string );
             dyString& operator+( const char* a_string );
             dyString& operator+( int_fast32_t a_integer );

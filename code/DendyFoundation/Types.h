@@ -21,11 +21,10 @@
 #pragma once
 
 //// - Standard includes section - ////
-#include <vector>
 #include <memory>
 #include <map>
-#include <sstream>
 #include "DendyFoundation/CustomTypes/DyString.h"
+#include "DendyFoundation/CustomTypes/DyVec.h"
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Specific to 'WINDOWS' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 #ifdef DENDYENGINE_PLATFORM_WINDOWS
    #include <stdint.h> ///< Using [basictype]_fast[minsize]_t
@@ -37,6 +36,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 class DendyEngine::DendyFoundation::CustomTypes::dyString;
+
+template <class T>//, class Allocator = std::allocator<T>>
+class DendyEngine::DendyFoundation::CustomTypes::dyVec;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,11 +61,14 @@ namespace DendyEngine {
    using dyFloat64 = double;        /// Signed 64b floating-point
 
    using dyString = DendyEngine::DendyFoundation::CustomTypes::dyString;
+   //typedef DendyEngine::DendyFoundation::CustomTypes::dyString dyString;
 
    template<class T, class U>
    using dyMap = std::map<T, U>;
-   template<class T>
-   using dyVec = std::vector<T>;
+   template<typename  T>
+   using dyVec = DendyEngine::DendyFoundation::CustomTypes::dyVec<T>;
+   //using dyVec = std::vector<T>;
+   //typedef DendyEngine::DendyFoundation::CustomTypes::dyVec<T> dyVec;
    template<class T, class U>
    using dyPair = std::pair<T,U>;
    template<class T>
