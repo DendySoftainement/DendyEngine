@@ -96,6 +96,53 @@ namespace DendyEngine {
 
 
    //////// -- Operator + -- ////////
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void dyString::operator+=( dyString const& a_string ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      m_string = m_string + a_string.m_string;
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void dyString::operator+=( const char* a_string ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      m_string = m_string + std::string( a_string );
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void dyString::operator+=( int_fast32_t a_integer ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      m_string = m_string + std::to_string( a_integer );
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void dyString::operator+=( float a_float ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      m_string = m_string + std::to_string( a_float );
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void dyString::operator+=( bool a_boolean ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      if ( a_boolean )
+         m_string = m_string + "true";
+      else
+         m_string = m_string + "false";
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
@@ -227,14 +274,33 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   char* dyString::asNewChar( ) const {
+   char* dyString::asCharValue( ) const {
    DENDYENGINE_CALLSTACK_ENTER;
       char* pResult = new char[m_string.length( ) + 1];
-      strncpy_s( pResult, m_string.length( ), m_string.c_str( ), m_string.length( ) );
+      strncpy_s( pResult, (m_string.length( )+1)*sizeof( char ), m_string.c_str( ), m_string.length( ) );
    DENDYENGINE_CALLSTACK_EXIT;
       return pResult;
    }
 
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   const char* dyString::asConstCharFancySign( ) const {
+   DENDYENGINE_CALLSTACK_ENTER;
+      dyString fancySign( "/////////////////////////////////////////////////////////////////////////////////////\n////" );
+      dyUInt spacesToInsert = 78 - m_string.length();
+      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
+         fancySign += " ";
+      }
+      fancySign += m_string;
+      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
+         fancySign += " ";
+      }
+      fancySign += "////\n/////////////////////////////////////////////////////////////////////////////////////\n";
+   DENDYENGINE_CALLSTACK_EXIT;
+      const char* pResult = fancySign.asCharValue( );
+      return std::move( pResult );
+   }
 
    //////// -- Find -- ////////
 

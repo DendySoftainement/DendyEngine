@@ -100,7 +100,7 @@ namespace DendyEngine {
                levelStr += "  ";
             }
             SCodeLocation location = currentDebug.context;
-            callStackStr += levelStr + ">> '" + location.functionStr + "' in file '" + location.fileStr + "'[" + location.lineStr + "]\n";
+            callStackStr += levelStr + ">> '" + location.functionStr + "'\n";
          }
 
          if (currentDebug.type == EEventType::DY_LOG) {
@@ -109,7 +109,7 @@ namespace DendyEngine {
                levelStr += "  ";
             }
             SCodeLocation location = currentDebug.context;
-            callStackStr += levelStr + "<LOG> In function '"+ location.functionStr +"' in file '" + location.fileStr + "'[" + location.lineStr + "]\n";
+            callStackStr += levelStr + "<LOG>\n";
             callStackStr += levelStr + "|  " + currentDebug.messageStr + '\n';
          }
 

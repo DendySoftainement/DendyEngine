@@ -87,12 +87,13 @@ namespace DendyEngine {
 			
 		   public:
          //// ----   Core   ---- ////
-            void append( T const& a_element ) { m_data.push_back( a_element ); }
+            template <class T>
+            void append( T a_element ) { m_data.push_back( a_element ); }
             T* data( ) { return m_data.data( ); }
             T* const& constData( ) { return const m_data.data( ); }
             uint64_t const& len( ) { return std::move( m_data.size( ) ); }
 
-            std::vector<T> asStdVector( ) const { return m_data; }
+            std::vector<T> asIterable( ) const { return m_data; }
 
          };
 

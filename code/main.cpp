@@ -13,23 +13,13 @@ using namespace DendyEngine;
 //using namespace DendyEngine::DendyFoundation::CustomTypes;
 
 int main( int argc, char** argv ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-   DENDYENGINE_LOG( "ONE" );
-   DENDYENGINE_CALLSTACK_EXIT;
 
-   DENDYENGINE_CALLSTACK_ENTER;
-   DENDYENGINE_LOG( "TWO" );
-   DENDYENGINE_CALLSTACK_ENTER;
-   DENDYENGINE_LOG( "THREE" );
-//DENDYENGINE_CALLSTACK_EXIT;
+   setbuf( stdout, NULL );
+
 
    DendyFoundation::DebugTools::CTimer performanceTimer;
    performanceTimer.reset( );
 
-   dyString myString = "Hello world";
-   printf( "%s\n", myString.asConstChar( ) );
-
-   //DENDYENGINE_CRITICAL_ERROR("This is an error");
 
    printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );
 
@@ -41,24 +31,15 @@ int main( int argc, char** argv ) {
    mainWindowConfig.caption = "This is the main window";
    mainWindow = windowSystemManager->openWindow( );
 
-   printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );
 
    secondWindow = windowSystemManager->openWindow( mainWindowConfig );
    thirdWindow = windowSystemManager->openWindow( mainWindowConfig );
-
-   printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );
 
    dyUInt64 elapsedSecondsLastTime = 0;
 
    while ( windowSystemManager->isCloseTriggered( mainWindow ) == false ) {
       windowSystemManager->gatherInputs( );
       //Sleep( 1000 );
-      
-      if ( elapsedSecondsLastTime != performanceTimer.getElapsedSeconds( ) ) {
-         elapsedSecondsLastTime = performanceTimer.getElapsedSeconds( );
-         printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );
-         printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );
-      }
    }
 
    windowSystemManager->closeWindow( mainWindow );

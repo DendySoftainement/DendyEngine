@@ -39,7 +39,7 @@ namespace DendyEngine {
          
    void UGLFWWindowHandle::_createVkInstance( ) {
    DENDYENGINE_CALLSTACK_ENTER;
-      VkApplicationInfo vkAppConfiguration = { };
+      /*VkApplicationInfo vkAppConfiguration = { };
       vkAppConfiguration.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
       vkAppConfiguration.pApplicationName = "Dendy Engine - Dendy Softainement";
       vkAppConfiguration.applicationVersion = VK_MAKE_VERSION( DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH );
@@ -68,7 +68,11 @@ namespace DendyEngine {
 
       if ( result != VK_SUCCESS ) {
          DENDYENGINE_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
-      }
+      }*/
+      VkInstanceCreateInfo vkInstanceConfiguration = { };
+      _getGlfwExtensionsForVk( &vkInstanceConfiguration.ppEnabledExtensionNames, vkInstanceConfiguration.enabledExtensionCount );
+      dyVec<dyString> extensions( vkInstanceConfiguration.enabledExtensionCount );
+      m_vulkanInstance = new DendyEngine::PixPhetamine::VulkanSystem::CVolkInstance( extensions );
 
    DENDYENGINE_CALLSTACK_EXIT;
    }
@@ -91,7 +95,7 @@ namespace DendyEngine {
 
       VkPhysicalDevice physicalDevicesVec[MAX_PHYSICAL_DEVICES];
       dyUInt physicalDevicesCount = MAX_PHYSICAL_DEVICES;
-      vkEnumeratePhysicalDevices( m_vulkanInstance, &physicalDevicesCount, physicalDevicesVec );
+      vkEnumeratePhysicalDevices( m_vulkanInstance->m_vulkanInstance, &physicalDevicesCount, physicalDevicesVec );
 
       // TODO Pick a real one
       VkPhysicalDevice vkPhysicalDevice = physicalDevicesVec[0];
@@ -191,7 +195,7 @@ namespace DendyEngine {
       DENDYENGINE_CALLSTACK_ENTER;
       glfwTerminate( );
       vkDestroyDevice( m_vulkanDevice, nullptr );
-      vkDestroyInstance( m_vulkanInstance, nullptr );
+      vkDestroyInstance( m_vulkanInstance->m_vulkanInstance, nullptr );
       DENDYENGINE_CALLSTACK_EXIT;
    }
 

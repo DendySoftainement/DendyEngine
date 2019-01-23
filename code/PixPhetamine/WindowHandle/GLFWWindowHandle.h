@@ -29,6 +29,7 @@
 
 //// - Internal includes section - ////
 #include "PixPhetamine/WindowHandle/WindowHandleInterface.h"
+#include "PixPhetamine/VulkanSystem/VolkInstance.h"
 
 //// - Defines and macro section - ////
 
@@ -79,7 +80,7 @@ namespace DendyEngine {
             dyVec<SVulkanReadyWindow> m_openedWindows;
             SConfiguration m_config;
             // Vulkan related folks
-            VkInstance m_vulkanInstance;
+            DendyEngine::PixPhetamine::VulkanSystem::CVolkInstance* m_vulkanInstance;
             VkDevice m_vulkanDevice;
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

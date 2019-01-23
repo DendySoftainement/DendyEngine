@@ -105,8 +105,9 @@ namespace DendyEngine {
 
          //// ----   Core   ---- ////
             const char* asConstChar( ) const;
-            char* asNewChar( ) const;
+            char* asCharValue( ) const;
             std::string asStdString( ) const { return m_string; }
+            const char* asConstCharFancySign( ) const;
 
             bool const& find( dyString const& a_toFind ) const;
             bool const& find( const char* a_toFind ) const;

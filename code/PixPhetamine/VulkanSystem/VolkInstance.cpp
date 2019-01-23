@@ -9,6 +9,7 @@
 
 //// -Foundation includes section- ////
 #include "DendyFoundation/DebugTools/DebugStack.h"
+#include "PixPhetamine/VulkanDebug/VolkDebug.h"
 
 //// - Internal includes section - ////
 
@@ -68,7 +69,7 @@ namespace DendyEngine {
       // Need vec<string> -> const char* const*
       dyVec<const char*> constCharSupportedExtensionsVec;
       for ( dyUInt i = 0; i < m_supportedExtensionsVec.len( ); ++i ) {
-         constCharSupportedExtensionsVec.append( m_supportedExtensionsVec[i].asConstChar( ) );
+         constCharSupportedExtensionsVec.append( m_supportedExtensionsVec[i].asCharValue( ) );
       }
 
 
@@ -94,24 +95,28 @@ namespace DendyEngine {
       vkEnumerateInstanceLayerProperties( &layerProprietiesCount, layerProrietiesVec.data() );
 
 #if DENDYENGINE_MODE_DEBUG
-      for each ( VkLayerProperties layerPropriety in layerProrietiesVec.asStdVector( ) ) {
-         printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
-         printf( "                                ACTIVE VULKAN LAYERS:\n" );
-         printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
-         
-         m_validationLayersVec.append( layerPropriety.layerName );
-         printf( " - Layer \"%s\"\n", layerPropriety.layerName );
-         printf( "   %s\n", layerPropriety.description );
+      // Default validation layer for minimal debug
+      m_validationLayersVec.append( "VK_LAYER_LUNARG_standard_validation" );
 
-         printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
-         m_validationLayersVec.append( "VK_LAYER_LUNARG_standard_validation" );
+      // Display fancy sign with layers
+      dyString activeVulkanLayersStr{ "ENABLED VULKAN LAYERS" };
+      printf( activeVulkanLayersStr.asConstCharFancySign( ) );
+
+      printf( "//// Layer \"%s\"\n", m_validationLayersVec[0].asConstChar( ) );
+      printf( "////    -> Default validation layer for minimal debug\n" );
+
+      for each ( VkLayerProperties layerPropriety in layerProrietiesVec.asIterable( ) ) {
+         m_validationLayersVec.append( layerPropriety.layerName );
+         printf( "//// Layer \"%s\"\n", layerPropriety.layerName );
+         printf( "////    -> %s\n", layerPropriety.description );
       }
+      printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
 #endif
 
       // Need vec<string> -> const char* const*
       dyVec<const char*> constCharValidationLayersVec;
       for ( dyUInt i = 0; i < m_validationLayersVec.len( ); ++i ) {
-         constCharValidationLayersVec.append( m_validationLayersVec[i].asConstChar( ) );
+         constCharValidationLayersVec.append( m_validationLayersVec[i].asCharValue( ) );
       }
 
       vkInstanceConfiguration.ppEnabledLayerNames = constCharValidationLayersVec.data( );
