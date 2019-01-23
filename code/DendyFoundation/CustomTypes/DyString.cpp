@@ -288,7 +288,7 @@ namespace DendyEngine {
    const char* dyString::asConstCharFancySign( ) const {
    DENDYENGINE_CALLSTACK_ENTER;
       dyString fancySign( "/////////////////////////////////////////////////////////////////////////////////////\n////" );
-      dyUInt spacesToInsert = 78 - m_string.length();
+      dyUInt64 spacesToInsert = 78 - m_string.length();
       for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
          fancySign += " ";
       }

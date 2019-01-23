@@ -14,7 +14,7 @@ using namespace DendyEngine;
 
 int main( int argc, char** argv ) {
 
-   setbuf( stdout, NULL );
+   setvbuf( stdout, NULL, _IONBF, 0 );
 
 
    DendyFoundation::DebugTools::CTimer performanceTimer;

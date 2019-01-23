@@ -66,12 +66,6 @@ include_directories(code)
 
 
 #============== Link Dependancies ==============#
-find_package(OpenGL REQUIRED)
-if (OPENGL_FOUND)
-    include_directories(${OPENGL_INCLUDE_DIRS})
-    link_libraries(${OPENGL_LIBRARIES})
-endif()
-
 set( GLFW_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/GLFW" )
 set( GLFW_LIBRARY "${CMAKE_SOURCE_DIR}/lib/GLFW/glfw3.lib" )
 #find_package(GLEW REQUIRED)
@@ -82,16 +76,16 @@ set( GLFW_LIBRARY "${CMAKE_SOURCE_DIR}/lib/GLFW/glfw3.lib" )
 
 #find_package(GLM REQUIRED)
 #if(GLM_FOUND)
-    include_directories(${GLM_INCLUDE_DIRS})
+#    include_directories(${GLM_INCLUDE_DIRS})
 #endif()
 
-set( SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/SDL2" )
-set( SDL2_LIBRARY "${CMAKE_SOURCE_DIR}/lib/SDL2/SDL2.lib" )
-find_package(SDL2 REQUIRED)
-if(SDL2_FOUND)
-    include_directories(${SDL2_INCLUDE_DIR})
-    link_libraries(${SDL2_LIBRARY})
-endif()
+#set( SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/SDL2" )
+#set( SDL2_LIBRARY "${CMAKE_SOURCE_DIR}/lib/SDL2/SDL2.lib" )
+#find_package(SDL2 REQUIRED)
+#if(SDL2_FOUND)
+#    include_directories(${SDL2_INCLUDE_DIR})
+#    link_libraries(${SDL2_LIBRARY})
+#endif()
 
 find_package(VULKAN REQUIRED)
 if(VULKAN_FOUND)
