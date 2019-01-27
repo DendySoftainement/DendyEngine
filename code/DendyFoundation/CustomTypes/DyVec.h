@@ -88,12 +88,35 @@ namespace DendyEngine {
 		   public:
          //// ----   Core   ---- ////
             template <class T>
-            void append( T a_element ) { m_data.push_back( a_element ); }
-            T* data( ) { return m_data.data( ); }
-            T* const& constData( ) { return const m_data.data( ); }
-            uint64_t const& len( ) { return std::move( m_data.size( ) ); }
+            void append( T a_element ) {
+               m_data.push_back( a_element );
+            }
 
-            std::vector<T> asIterable( ) const { return m_data; }
+            void alloc( uint64_t a_allocCount ) {
+               m_data.reserve( a_allocCount );
+            }
+
+            T* data( ) {
+               return m_data.data( );
+            }
+
+            T* const& constData( ) { 
+               return const m_data.data( );
+            }
+
+            uint64_t const& len( ) { 
+               uint64_t len = m_data.size( );
+               return len;
+            }
+
+            template <class T>
+            bool find( T a_element ) const {
+               return std::find( m_data.begin( ), m_data.end( ), a_element ) != m_data.end( );
+            }
+
+            std::vector<T> asIterable( ) const { 
+               return m_data;
+            }
 
          };
 

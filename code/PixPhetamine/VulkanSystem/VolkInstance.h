@@ -6,7 +6,12 @@
 ////   -----------------------------
 ////   \brief   None
 ////   ---------------------------------------------------------------------------------------------------------------------------------------------------------
-////   \details None
+////   \details It's all about the constructor... :
+////            -1- Init GLFW System if it's the first VolkInstance instance
+////            -2- Set (hardcode for now) extensions and layers to use for this instance
+////            -2- Retrieve supported extensions for Vulkan on this machine
+////            -3- Retrieve supported extensions for Vulkan on this machine
+////            And of course the destructor (RAII) - including shutdown of GLFW System
 //// -----------------------------------------------------------------------------------------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,6 +21,8 @@
 //// - Standard includes section - ////
 
 //// - External includes section - ////
+#define GLFW_INCLUDE_VULKAN
+#include "glfw3.h"
 #include <vulkan/vulkan.h>
 
 //// -Foundation includes section- ////
@@ -56,26 +63,38 @@ namespace DendyEngine {
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          public:
             static dyUInt instancesCount;
-            VkInstance m_vulkanInstance;
+
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Members -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
+            dyVec<dyString> m_supportedExtensionNamesVec;
+            dyVec<dyString> m_activeExtensionNamesVec;
+
+            dyVec<dyString> m_supportedValidationLayerNamesVec;
+            dyVec<dyString> m_activeValidationLayerNamesVec;
+
+            VkInstance m_vulkanInstance{ };
             
-            dyVec<dyString> m_supportedExtensionsVec;
-            dyVec<dyString> m_validationLayersVec;
+            VkSurfaceKHR m_surface{ };
+            
+            GLFWwindow* m_glfwWindowHandle{ nullptr };
+
+            VkDebugReportCallbackEXT m_callback{ VK_NULL_HANDLE };
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Methods -----                                                                                                                 ////
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          private:
          //// ---- Internal ---- ////
-            
+            void _startGlfw( );
+            dyVec<const char*> _retrieveSupportedExtensions( );
+            dyVec<const char*> _retrieveSupportedValidationLayers( );
+            void _setCallbackDebugLogger( );
 
          public:
          //// ----  Object  ---- ////
-            CVolkInstance( 
-                  dyVec<dyString> const& a_supportedExtensionsVec,
+            CVolkInstance(
                   dyString const& a_programName = "PixPhetamine",
                   dyUInt a_programVersionMajor = 1,
                   dyUInt a_programVersionMinor = 0,
@@ -90,7 +109,9 @@ namespace DendyEngine {
 			
 		   public:
          //// ----   Core   ---- ////
-			
+            VkInstance getVulkanInstance( ) const { return m_vulkanInstance; }
+            //dyVec<dyString> getSupportedExtensionsVec( ) const { return m_supportedExtensionsVec; }
+            //dyVec<dyString> getValidationLayersVec( ) const { return m_validationLayersVec; }
 
          };
 

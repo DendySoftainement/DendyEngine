@@ -20,6 +20,11 @@ int main( int argc, char** argv ) {
    DendyFoundation::DebugTools::CTimer performanceTimer;
    performanceTimer.reset( );
 
+   printf( dyString::allocFormatedConstChar("%s %s", "Heyyou", "out there on your own") );
+
+   DENDYENGINE_LOG( "ONE" );
+   DENDYENGINE_LOG( dyString::allocFormatedConstChar("%s", "IsThe lonliest number") );
+
 
    printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );
 
@@ -36,6 +41,42 @@ int main( int argc, char** argv ) {
    thirdWindow = windowSystemManager->openWindow( mainWindowConfig );
 
    dyUInt64 elapsedSecondsLastTime = 0;
+
+
+
+   printf( "Sizeof dyUInt: %llu\n", sizeof( dyUInt ) );
+   printf( "Sizeof dyUInt16: %llu\n", sizeof( dyUInt16 ) );
+   printf( "Sizeof dyUInt64: %llu\n", sizeof( dyUInt64 ) );
+   printf( "Sizeof dyInt: %llu\n", sizeof( dyInt ) );
+   printf( "Sizeof dyInt16: %llu\n", sizeof( dyInt16 ) );
+   printf( "Sizeof dyInt64: %llu\n", sizeof( dyInt64 ) );
+   printf( "Sizeof dyFloat: %llu\n", sizeof( dyFloat ) );
+   printf( "Sizeof dyFloat64: %llu\n", sizeof( dyFloat64 ) );
+
+   struct SFakeStruct {
+      dyInt one{ 34 };
+      dyInt two{ 42 };
+      dyInt three{ 42 };
+   };
+
+   struct SFATFakeStruct {
+      dyFloat64 one[8000000];
+   };
+
+
+   printf( "Sizeof SFakeStruct: %llu\n", sizeof( SFakeStruct) );
+   printf( "Sizeof pSFakeStruct: %llu\n", sizeof( SFakeStruct* ) );
+   printf( "Sizeof SFATFakeStruct: %llu\n", sizeof( SFATFakeStruct ) );
+   printf( "Sizeof SFATFakeStruct: %llu\n", sizeof( SFATFakeStruct* ) );
+
+
+
+
+
+   
+
+
+
 
    while ( windowSystemManager->isCloseTriggered( mainWindow ) == false ) {
       windowSystemManager->gatherInputs( );

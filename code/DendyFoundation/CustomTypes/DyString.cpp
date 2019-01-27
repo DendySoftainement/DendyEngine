@@ -9,7 +9,7 @@
 //// - External includes section - ////
 
 //// -Foundation includes section- ////
-#include "DendyFoundation/DebugTools/DebugStack.h"
+#include "DendyFoundation/Types.h"
 
 //// - Internal includes section - ////
 
@@ -59,40 +59,25 @@ namespace DendyEngine {
    }
 
    dyString::dyString( dyString const& a_string ) :
-      m_string( a_string.m_string ) {
+      m_memory( a_string.m_memory ) {
       /***/
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString::dyString( uint_fast16_t a_capacity ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      m_string = "";
-      m_string.resize( a_capacity );
-   DENDYENGINE_CALLSTACK_EXIT;
-   }
-
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString::dyString( const char* a_string, ... ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      va_list args;
-      va_start( args, a_string );
-      m_string += std::string( a_string );
-      va_end( args );
-   DENDYENGINE_CALLSTACK_EXIT;
+   dyString::dyString( const char* a_string ):
+      m_memory( a_string ) {
+      /***/
    }
          
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString::dyString( std::string a_string ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      m_string = a_string;
-   DENDYENGINE_CALLSTACK_EXIT;
-   }
+   dyString::dyString( std::string a_string ):
+      m_memory( a_string ) {
+      /***/
+    }
 
 
    //////// -- Operator + -- ////////
@@ -100,102 +85,84 @@ namespace DendyEngine {
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void dyString::operator+=( dyString const& a_string ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      m_string = m_string + a_string.m_string;
-   DENDYENGINE_CALLSTACK_EXIT;
+      m_memory += a_string.m_memory;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void dyString::operator+=( const char* a_string ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      m_string = m_string + std::string( a_string );
-   DENDYENGINE_CALLSTACK_EXIT;
+      m_memory += std::string( a_string );
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void dyString::operator+=( int_fast32_t a_integer ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      m_string = m_string + std::to_string( a_integer );
-   DENDYENGINE_CALLSTACK_EXIT;
+      m_memory += std::to_string( a_integer );
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void dyString::operator+=( float a_float ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      m_string = m_string + std::to_string( a_float );
-   DENDYENGINE_CALLSTACK_EXIT;
+      m_memory += std::to_string( a_float );
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void dyString::operator+=( bool a_boolean ) {
-   DENDYENGINE_CALLSTACK_ENTER;
       if ( a_boolean )
-         m_string = m_string + "true";
+         m_memory += "true";
       else
-         m_string = m_string + "false";
-   DENDYENGINE_CALLSTACK_EXIT;
+         m_memory += "false";
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyString& dyString::operator+( dyString const& a_string ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      dyString result = m_string + a_string.m_string;
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      dyString result;
+      result.m_memory += a_string.m_memory;
+      return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyString& dyString::operator+( const char* a_string ) {
-   DENDYENGINE_CALLSTACK_ENTER;
-      dyString result = *this + dyString( a_string );
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      dyString result;
+      result.m_memory += a_string;
+      return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyString& dyString::operator+( int_fast32_t a_integer ) {
-   DENDYENGINE_CALLSTACK_ENTER;
       dyString result( std::to_string( a_integer ) );
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyString& dyString::operator+( float a_float ) {
-   DENDYENGINE_CALLSTACK_ENTER;
       dyString result( std::to_string( a_float ) );
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyString& dyString::operator+( bool a_boolean ) {
-   DENDYENGINE_CALLSTACK_ENTER;
       dyString result;
       if ( a_boolean )
-         result = "true";
+         result += "true";
       else
-         result = "false";
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+         result += "false";
+      return result;
    }
 
    //////// -- Comparator == -- ////////
@@ -203,31 +170,25 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyBool const& dyString::operator==( dyString const& a_string ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
-      bool result = m_string.compare( a_string.m_string ) == 0;
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+   dyBool dyString::operator==( dyString const& a_string ) {
+      bool result = m_memory.compare( a_string.m_memory ) == 0;
+      return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyBool const& dyString::operator==( const char* a_string ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
+   dyBool dyString::operator==( const char* a_string ) {
       dyString otherString( a_string );
-      bool result = m_string.compare( otherString.m_string ) == 0;
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      bool result = m_memory.compare( otherString.m_memory ) == 0;
+      return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyString::operator bool( ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
-      return m_string.compare( "" ) == 0;
-   DENDYENGINE_CALLSTACK_EXIT;
+      return m_memory.compare( "" ) == 0;
    }
 
 
@@ -240,6 +201,65 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
+   const char* dyString::allocConstCharFancyPanel( dyString a_string ) {
+      dyString fancySign( "/////////////////////////////////////////////////////////////////////////////////////\n////" );
+      //dyString fancySign( "-------------------------------------------------------------------------------------\n----" );
+      dyUInt64 spacesToInsert = 78 - a_string.len( );
+      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
+         fancySign += " ";
+      }
+      fancySign += a_string;
+      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
+         fancySign += " ";
+      }
+      fancySign += "////\n/////////////////////////////////////////////////////////////////////////////////////\n";
+      //fancySign += "----\n---------------------------------------------------------------------------------------\n";
+      return fancySign.asAllocatedConstChar( );
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   const char* dyString::allocConstCharFancySeparationLine( ) {
+      dyString fancySign( "/////////////////////////////////////////////////////////////////////////////////////\n" );
+      //dyString fancySign( "-------------------------------------------------------------------------------------\n" );
+      return fancySign.asAllocatedConstChar( );
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   const char* dyString::allocFormatedConstChar( const char* a_format, ... ) {
+      // Tipiaked from https://www.codeproject.com/articles/15115/how-to-format-a-string
+
+      std::string result( "" );
+
+      if ( a_format != nullptr ) {
+         va_list marker = NULL;
+
+         // initialize variable arguments
+         va_start( marker, a_format );
+
+         // Get formatted string length adding one for NULL
+         size_t len = _vscprintf( a_format, marker ) + 1;
+
+         // Create a char vector to hold the formatted string.
+         std::vector<char> buffer( len, '\0' );
+         int nWritten = _vsnprintf_s( &buffer[0], buffer.size( ), len, a_format, marker );
+
+         if ( nWritten > 0 ) {
+            result = &buffer[0];
+         }
+
+         // Reset variable arguments
+         va_end( marker );
+      }
+
+      char* allocatedResult = new char[result.length()+1];
+      strcpy( allocatedResult, result.c_str() ); // this puts a '\0' at the end ;)
+
+      return allocatedResult;
+   }
 
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,70 +279,23 @@ namespace DendyEngine {
    ////  ================================================================================================================================  ////
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   //////// -- Fully explicit casts (and interpret) -- ////////
-
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   const char* dyString::asConstChar( ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
-      const char* pResult = m_string.c_str( );
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( pResult );
-   }
-
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   char* dyString::asCharValue( ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
-      char* pResult = new char[m_string.length( ) + 1];
-      strncpy_s( pResult, (m_string.length( )+1)*sizeof( char ), m_string.c_str( ), m_string.length( ) );
-   DENDYENGINE_CALLSTACK_EXIT;
-      return pResult;
-   }
-
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   const char* dyString::asConstCharFancySign( ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
-      dyString fancySign( "/////////////////////////////////////////////////////////////////////////////////////\n////" );
-      dyUInt64 spacesToInsert = 78 - m_string.length();
-      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
-         fancySign += " ";
-      }
-      fancySign += m_string;
-      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
-         fancySign += " ";
-      }
-      fancySign += "////\n/////////////////////////////////////////////////////////////////////////////////////\n";
-   DENDYENGINE_CALLSTACK_EXIT;
-      const char* pResult = fancySign.asCharValue( );
-      return std::move( pResult );
-   }
-
    //////// -- Find -- ////////
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyBool const& dyString::find( dyString const& a_toFind ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
-      bool result = m_string.find( a_toFind.m_string ) == std::string::npos;
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      bool result = m_memory.find( a_toFind.m_memory ) == std::string::npos;
+      return result;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    dyBool const& dyString::find( const char* a_toFind ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
       dyString otherString( a_toFind );
-      bool result = m_string.find( otherString.m_string ) == std::string::npos;
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      bool result = m_memory.find( otherString.m_memory ) == std::string::npos;
+      return result;
    }
 
 
@@ -332,41 +305,35 @@ namespace DendyEngine {
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void dyString::replace( dyString const& a_toFind, dyString const& a_newValue ) {
-   DENDYENGINE_CALLSTACK_ENTER;
       std::string newString = "";
-      std::string oldString = m_string;
-      std::size_t pos = oldString.find( a_toFind.m_string );
+      std::string oldString = m_memory;
+      std::size_t pos = oldString.find( a_toFind.m_memory );
       while ( pos != std::string::npos ) {
-         newString += oldString.substr( 0, pos ) += a_newValue.m_string;
+         newString += oldString.substr( 0, pos ) += a_newValue.m_memory;
          oldString = oldString.substr( pos );
-         pos = oldString.find( a_toFind.m_string );
+         pos = oldString.find( a_toFind.m_memory );
       }
-      m_string = newString;
-   DENDYENGINE_CALLSTACK_EXIT;
+      m_memory = newString;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void dyString::replace( const char* a_toFind, const char* a_newValue ) {
-   DENDYENGINE_CALLSTACK_ENTER;
       replace( dyString( a_toFind ), dyString( a_newValue ) );
-   DENDYENGINE_CALLSTACK_EXIT;
    }
 
 
    //////// -- Substring -- ////////
 
    /// \brief Eis phokoowin scheit gonna work as a python substring [2:-1]
-   dyString const& dyString::substring( int_fast16_t a_begin, int_fast16_t a_end ) const {
-   DENDYENGINE_CALLSTACK_ENTER;
+   dyString dyString::substring( int_fast16_t a_begin, int_fast16_t a_end ) const {
       dyUInt64 realEnd = a_end;
       if ( a_end <= 0 ) {
-         realEnd = m_string.length( ) + a_end;
+         realEnd = m_memory.length( ) + a_end;
       }
-      dyString result = m_string.substr( a_begin, realEnd );
-   DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( result );
+      dyString result( m_memory.substr( a_begin, realEnd ) );
+      return result;
    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

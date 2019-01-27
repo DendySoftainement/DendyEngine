@@ -103,6 +103,7 @@ namespace DendyEngine {
             callStackStr += levelStr + ">> '" + location.functionStr + "'\n";
          }
 
+         /*
          if (currentDebug.type == EEventType::DY_LOG) {
             std::string levelStr = "";
             for (dyUInt i_level = 0; i_level<level; i_level++) {
@@ -112,6 +113,7 @@ namespace DendyEngine {
             callStackStr += levelStr + "<LOG>\n";
             callStackStr += levelStr + "|  " + currentDebug.messageStr + '\n';
          }
+         */
 
          if (currentDebug.type == EEventType::DY_CRITICAL_ERROR) {
             level++;
@@ -180,6 +182,7 @@ namespace DendyEngine {
       debugEvent.messageStr = a_messageStr;
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
+      printf( "%s\n", a_messageStr.c_str( ) );
    }
 
    void UDebugStack::exit() {
@@ -206,17 +209,26 @@ namespace DendyEngine {
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
 
-      printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
-      printf("                                CRITICAL ERROR!\n");
-      printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+      const char* tempConstChar = dyString::allocConstCharFancyPanel( "CRITICAL ERROR" );
+      printf( tempConstChar );
+      delete[] tempConstChar;
+
+
       printf( "%s\n", a_messageStr.c_str() );
 
-      printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
-      printf("                                CALL STACK:\n");
-      printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+      tempConstChar = dyString::allocConstCharFancySeparationLine( );
+      printf( tempConstChar );
+      delete[] tempConstChar;
+      
+      tempConstChar = dyString::allocConstCharFancyPanel( "CALLSTACK" );
+      printf( tempConstChar );
+      delete[] tempConstChar;
+
       _dump();
-      printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
-      printf("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+
+      tempConstChar = dyString::allocConstCharFancySeparationLine( );
+      printf( tempConstChar );
+      delete[] tempConstChar;
 
       while ( true )
       {

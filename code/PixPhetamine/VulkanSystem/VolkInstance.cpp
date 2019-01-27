@@ -46,7 +46,108 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
+   void CVolkInstance::_startGlfw( ) {
+   DENDYENGINE_CALLSTACK_ENTER;
 
+      //// glfwInit
+      if ( glfwInit( ) == false )
+         DENDYENGINE_CRITICAL_ERROR( "Failed to initialize GLFW" );
+      DENDYENGINE_LOG( "GLFW System Initialised [ OK ]" );
+
+      //// check is Vulkan is supported
+      if ( glfwVulkanSupported( ) == false )
+         DENDYENGINE_CRITICAL_ERROR( "This version of GLFW on this machine doesn't support Vulkan" );
+      DENDYENGINE_LOG( "GLFW Vulkan support [ OK ]" );
+
+   DENDYENGINE_CALLSTACK_EXIT;
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   dyVec<const char*> CVolkInstance::_retrieveSupportedExtensions( ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+
+      //// Phase 1 Retrieve supported:
+
+      dyUInt32 supportedExtensionCount;
+      // Apparently don't need to free this thing, since glfw will do it ;) ((seems logical after all))
+      const char** pSupportedExtensionsConstChar = glfwGetRequiredInstanceExtensions( &supportedExtensionCount );
+
+
+      // Display fancy sign with supported extensions
+      DENDYENGINE_LOG( dyString::allocConstCharFancyPanel( "SUPPORTED VULKAN EXTENSIONS" ) );
+      for ( dyUInt i = 0; i < supportedExtensionCount; i++ ) {
+         m_supportedExtensionNamesVec.append( pSupportedExtensionsConstChar[i] );
+         DENDYENGINE_LOG( dyString::allocFormatedConstChar("//// - Extension \"%s\"\n", pSupportedExtensionsConstChar[i] ) );
+      }
+      DENDYENGINE_LOG( dyString::allocFormatedConstChar( "%s\n", dyString::allocConstCharFancySeparationLine( ) ) );
+      
+
+      //// Phase 2 Verify and remove not supoorted (and crash if required):
+      //// PS: for the moment all are required!!!
+
+      dyVec<const char*> actuallyActiveNamesVec;
+
+      for ( dyString& extensionToActivate : m_activeExtensionNamesVec.asIterable( ) ) {
+         if ( m_supportedExtensionNamesVec.find( extensionToActivate ) == false ) {
+            DENDYENGINE_CRITICAL_ERROR( dyString::allocFormatedConstChar( "Extension '%s' for Vulkan unavailable on this support!", extensionToActivate.asConstChar( ) ) );
+         }
+         actuallyActiveNamesVec.append( extensionToActivate.asConstChar( ) );
+      }
+
+   DENDYENGINE_CALLSTACK_EXIT;
+      return std::move( actuallyActiveNamesVec );
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   dyVec<const char*> CVolkInstance::_retrieveSupportedValidationLayers( ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+      
+      //// Phase 1 Retrieve supported:
+
+      // Get supported validation layers on the current system
+      dyUInt layerProprietiesCount;
+      vkEnumerateInstanceLayerProperties( &layerProprietiesCount, nullptr );
+      dyVec<VkLayerProperties> layerProrietiesVec( layerProprietiesCount );
+      vkEnumerateInstanceLayerProperties( &layerProprietiesCount, layerProrietiesVec.data( ) );
+         
+      // Display fancy sign with layers
+      DENDYENGINE_LOG( dyString::allocConstCharFancyPanel( "ENABLED VULKAN LAYERS" ) );
+      for each ( VkLayerProperties layerPropriety in layerProrietiesVec.asIterable( ) ) {
+         m_supportedValidationLayerNamesVec.append( layerPropriety.layerName );
+         DENDYENGINE_LOG( dyString::allocFormatedConstChar( "//// - Layer \"%s\"\n", layerPropriety.layerName ) );
+         DENDYENGINE_LOG( dyString::allocFormatedConstChar( "////    -> %s\n", layerPropriety.description ) );
+      }
+      DENDYENGINE_LOG( dyString::allocFormatedConstChar( "%s\n", dyString::allocConstCharFancySeparationLine( ) ) );
+
+      //for ( int i = 0; i < 10000000; i++ )
+      //   dyString::allocFormatedConstChar( "%s\n", dyString::allocConstCharFancySeparationLine( ) );
+
+      //// Phase 2 Verify and remove not supoorted (and crash if required):
+      //// PS: for the moment all are required!!!
+
+      dyVec<const char*> actuallyActiveNamesVec;
+
+      for ( dyString& layerToActivate : m_activeValidationLayerNamesVec.asIterable( ) ) {
+         if ( m_supportedValidationLayerNamesVec.find( layerToActivate ) == false ) {
+            DENDYENGINE_CRITICAL_ERROR( dyString::allocFormatedConstChar( "Layer '%s' for Vulkan unavailable on this support!", layerToActivate.asConstChar( ) ) );
+         }
+         actuallyActiveNamesVec.append( layerToActivate.asConstChar( ) );
+      }
+
+   DENDYENGINE_CALLSTACK_EXIT;
+      return std::move( actuallyActiveNamesVec );
+   }
+
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   //
+   //----------------------------------------------------------------------------------------------------------------------------------------//
+   void CVolkInstance::_setCallbackDebugLogger( ) {
+
+   }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    ////  ================================================================================================================================  ////
@@ -57,25 +158,43 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   CVolkInstance::CVolkInstance(dyVec<dyString> const& a_supportedExtensionsVec, dyString const& a_programName, dyUInt a_programVersionMajor, dyUInt a_programVersionMinor, dyUInt a_programVersionPatch) {
+   CVolkInstance::CVolkInstance(dyString const& a_programName, dyUInt a_programVersionMajor, dyUInt a_programVersionMinor, dyUInt a_programVersionPatch) {
    DENDYENGINE_CALLSTACK_ENTER;
 
-      m_supportedExtensionsVec = a_supportedExtensionsVec;
-
-#if DENDYENGINE_MODE_DEBUG
-      m_supportedExtensionsVec.append( VK_EXT_DEBUG_REPORT_EXTENSION_NAME );
-#endif
-
-      // Need vec<string> -> const char* const*
-      dyVec<const char*> constCharSupportedExtensionsVec;
-      for ( dyUInt i = 0; i < m_supportedExtensionsVec.len( ); ++i ) {
-         constCharSupportedExtensionsVec.append( m_supportedExtensionsVec[i].asCharValue( ) );
+      if ( instancesCount == 0 ) {
+         _startGlfw( );
       }
+
+      //// REQUIRED EXTENSIONS
+      //
+      // Required to draw on screen
+      m_activeExtensionNamesVec.append( VK_KHR_SURFACE_EXTENSION_NAME );
+      //
+      // Enables debug reports
+      m_activeExtensionNamesVec.append( VK_EXT_DEBUG_REPORT_EXTENSION_NAME );
+      //
+      //// -------------------
+
+      //// REQUIRED VALIDATION LAYERS
+      //
+      // Build in standard validation
+      /* 
+      #if DENDYENGINE_MODE_DEBUG
+         m_activeValidationLayerNamesVec.append( "VK_LAYER_LUNARG_standard_validation" );
+      #endif
+         */
+      //
+      //// -------------------
+
+
+      dyVec<const char*> actuallyActiveExtensionNamesVec = _retrieveSupportedExtensions( );
+      dyVec<const char*> actuallyActiveLayerNamesVec = _retrieveSupportedValidationLayers( );
+
 
 
       VkApplicationInfo vkAppConfiguration = { };
       vkAppConfiguration.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-      vkAppConfiguration.pApplicationName = a_programName.asConstChar( );//"Dendy Engine - Dendy Softainement";
+      vkAppConfiguration.pApplicationName = a_programName.asConstChar( );
       vkAppConfiguration.applicationVersion = VK_MAKE_VERSION( DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH );
       vkAppConfiguration.pEngineName = "Dendy Engine";
       vkAppConfiguration.engineVersion = VK_MAKE_VERSION( DENDYENGINE_VERSION_MAJOR, DENDYENGINE_VERSION_MINOR, DENDYENGINE_VERSION_PATCH );
@@ -85,52 +204,81 @@ namespace DendyEngine {
       VkInstanceCreateInfo vkInstanceConfiguration = { };
       vkInstanceConfiguration.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
       vkInstanceConfiguration.pApplicationInfo = &vkAppConfiguration;
-      vkInstanceConfiguration.ppEnabledExtensionNames = constCharSupportedExtensionsVec.data( );
-      vkInstanceConfiguration.enabledExtensionCount = static_cast<dyUInt32>( constCharSupportedExtensionsVec.len( ) );
+      vkInstanceConfiguration.ppEnabledExtensionNames = actuallyActiveExtensionNamesVec.data( );
+      vkInstanceConfiguration.enabledExtensionCount = static_cast<dyUInt32>( actuallyActiveExtensionNamesVec.len( ) );
+      vkInstanceConfiguration.ppEnabledLayerNames = actuallyActiveLayerNamesVec.data( );
+      vkInstanceConfiguration.enabledLayerCount = static_cast<dyUInt32>( actuallyActiveLayerNamesVec.len( ) );
 
 
-      dyUInt layerProprietiesCount;
-      vkEnumerateInstanceLayerProperties( &layerProprietiesCount, nullptr );
-      dyVec<VkLayerProperties> layerProrietiesVec( layerProprietiesCount );
-      vkEnumerateInstanceLayerProperties( &layerProprietiesCount, layerProrietiesVec.data() );
 
-#if DENDYENGINE_MODE_DEBUG
-      // Default validation layer for minimal debug
-      m_validationLayersVec.append( "VK_LAYER_LUNARG_standard_validation" );
-
-      // Display fancy sign with layers
-      dyString activeVulkanLayersStr{ "ENABLED VULKAN LAYERS" };
-      printf( activeVulkanLayersStr.asConstCharFancySign( ) );
-
-      printf( "//// Layer \"%s\"\n", m_validationLayersVec[0].asConstChar( ) );
-      printf( "////    -> Default validation layer for minimal debug\n" );
-
-      for each ( VkLayerProperties layerPropriety in layerProrietiesVec.asIterable( ) ) {
-         m_validationLayersVec.append( layerPropriety.layerName );
-         printf( "//// Layer \"%s\"\n", layerPropriety.layerName );
-         printf( "////    -> %s\n", layerPropriety.description );
-      }
-      printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
-#endif
-
-      // Need vec<string> -> const char* const*
-      dyVec<const char*> constCharValidationLayersVec;
-      for ( dyUInt i = 0; i < m_validationLayersVec.len( ); ++i ) {
-         constCharValidationLayersVec.append( m_validationLayersVec[i].asCharValue( ) );
-      }
-
-      vkInstanceConfiguration.ppEnabledLayerNames = constCharValidationLayersVec.data( );
-      vkInstanceConfiguration.enabledLayerCount = static_cast<dyUInt32>( m_validationLayersVec.len( ) );
-
-
+      //// SURFACE KHR CREATION
       VkResult result = vkCreateInstance( &vkInstanceConfiguration, nullptr, &m_vulkanInstance );
+      //// --------------------
+
 
       if ( result != VK_SUCCESS ) {
          DENDYENGINE_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
       }
       
+#if DENDYENGINE_MODE_DEBUG
+      VkDebugReportCallbackCreateInfoEXT vkDebugInfo;
+      vkDebugInfo.flags = VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_DEBUG_BIT_EXT |
+         VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_ERROR_BIT_EXT |
+         VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT |
+         VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_INFORMATION_BIT_EXT |
+         VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
+         VkDebugReportFlagBitsEXT::VK_DEBUG_REPORT_WARNING_BIT_EXT;
+      vkDebugInfo.pfnCallback = DendyEngine::PixPhetamine::VulkanDebug::debugCallback;
+
+      //vkCreateDebugReportCallbackEXT( m_vulkanInstance, &vkDebugInfo, nullptr, &m_callback );
+#endif
+
+
+
+      //// KHR Surface (destroy previous)
+      //if ( m_surface != VkSurfaceKHR( ) )
+      //   vkDestroySurfaceKHR( m_vulkanInstance, m_surface, nullptr );
+
+      //// WINDOW CREATION
+      glfwWindowHint( GLFW_CLIENT_API, GLFW_NO_API );
+      glfwWindowHint( GLFW_DECORATED, GLFW_TRUE );
+      m_glfwWindowHandle = glfwCreateWindow( 640, 480, a_programName.asConstChar( ), nullptr, nullptr );
+      //// --------------------
+
+      //// SURFACE KHR CREATION
+      result = glfwCreateWindowSurface( m_vulkanInstance, m_glfwWindowHandle, nullptr, &m_surface );
+      //// --------------------
+
+      instancesCount++;
+
    DENDYENGINE_CALLSTACK_EXIT;
    }
+
+   CVolkInstance::~CVolkInstance( ) {
+   DENDYENGINE_CALLSTACK_ENTER;
+
+      if ( m_callback != VK_NULL_HANDLE ) {
+         //auto func = (PFN_vkDestroyDebugReportCallbackEXT)getProcAddr( "vkDestroyDebugReportCallbackEXT" );
+         //func( m_instance, mCallback, nullptr );
+      }
+
+      vkDestroyInstance( m_vulkanInstance, nullptr );
+
+      //glfwDestroyWindow( window );
+
+      instancesCount--;
+      if ( instancesCount == 0 )
+         glfwTerminate( );
+
+      
+      //vkDestroySurfaceKHR( m_surface );
+      //destroy( );
+
+      
+   DENDYENGINE_CALLSTACK_ENTER;
+   }
+   
+
    
    
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

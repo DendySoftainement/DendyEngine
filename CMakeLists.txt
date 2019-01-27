@@ -61,7 +61,8 @@ set(PIXPHETAMINE_VERSION_NAME 'V${PIXPHETAMINE_VERSION_MAJOR}.${PIXPHETAMINE_VER
 
 
 
-include_directories(code)
+include_directories("${CMAKE_SOURCE_DIR}/code")
+include_directories("${CMAKE_SOURCE_DIR}/include")
 
 
 

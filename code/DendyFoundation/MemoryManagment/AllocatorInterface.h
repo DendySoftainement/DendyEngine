@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// -----------------------------------------------------------------------------------------------------------------------------------------------------------
-////   \file    VolkDebug.h
+////   \file    AllocatorInterface.h
 ////   \author  Daniel Huc aka Dendy
 ////   \date    January 2019
 ////   -----------------------------
@@ -14,13 +14,13 @@
 #pragma once
 
 //// - Standard includes section - ////
+#include <new>
+#include <functional>
 
 //// - External includes section - ////
-#include <vulkan/vulkan.h>
 
 //// -Foundation includes section- ////
 #include "DendyFoundation/Types.h"
-#include "DendyFoundation/DebugTools/DebugStack.h"
 
 //// - Internal includes section - ////
 
@@ -42,36 +42,87 @@
 //// ---- Namespaces ---- ////
 namespace DendyEngine {
 
-   namespace PixPhetamine {
+   namespace DendyFoundation {
 
-      namespace VulkanDebug {
+      namespace MemoryManagment {
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////   Class IAllocator
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+         class IAllocator {
+
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         //// ---- Enum/Struct/Constants -----                                                                                                   ////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         public:
+            static const dyUInt8 DEFAULT_ALIGNEMENT{ 8 };
+
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         //// ---- Members -----                                                                                                                 ////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         protected:
+            size_t m_size{ 0 };
+            size_t m_allocatedSize{ 0 };
+            size_t m_allocationsCount{ 0 };
+
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         //// ---- Methods -----                                                                                                                 ////
+         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+         private:
+         //// ---- Internal ---- ////
+            
+
+         public:
+         //// ----  Object  ---- ////
+            IAllocator( size_t a_size ): m_size( a_size ) { /***/ };
+            virtual ~IAllocator( ) { /***/ };
+			
+		   //// ----  Static  ---- ////
+
+         protected:
+         //// ----  Forbid  ---- ////
+            IAllocator( IAllocator const& );
+            IAllocator& operator=( IAllocator& );
+
+		   public:
+         //// ----   Core   ---- ////
+            virtual void* alloc( size_t a_size, dyUInt8 a_alignement = DEFAULT_ALIGNEMENT ) = 0;
+            virtual void free( void* a_pointer ) = 0;
+
+            size_t getSize( ) const { return m_size; }
+            size_t getAllocatedSize( ) const { return m_allocatedSize; }
+            size_t getNbAllocations( ) const { return m_allocationsCount; }
+
+         };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                                                                                                                                        ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   /// Validation layer callback: in debug mode CRITICAL_ERROR with cause
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback( VkDebugReportFlagsEXT,
-      VkDebugReportObjectTypeEXT,
-      uint64_t,
-      size_t,
-      int32_t,
-      const char*,
-      const char* msg,
-      void* ) {
-#if DENDYENGINE_MODE_DEBUG
-         dyString ErrorMessage( dyString::allocFormatedConstChar("VolkValidationLayer [ ERROR ]!\n%s\n", msg) );
-         DENDYENGINE_CRITICAL_ERROR( ErrorMessage.asStdString() );
-#endif // DENDYENGINE_MODE_DEBUG
-      return VK_FALSE;
-   }
+         //// Helpful functions:
+         template <class T, class... Args>
+         T* dyNew( IAllocator& a_allocator, Args&&... args );
+
+         template<class T>
+         void dyDelete( IAllocator& a_allocator, T* object );
+
+         template<class T>
+         T* dyNewArray( IAllocator& a_allocator, size_t length );
+
+         template<class T>
+         T* dyNewArrayWithoutConstructor( IAllocator& a_allocator, size_t length );
+
+         template<class T>
+         void dyDeleteArray( IAllocator& a_allocator, T* array );
+
+         template<class T>
+         void dyDeleteArrayWithoutDestructor( IAllocator& a_allocator, T* array );
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                                                                                                                                        ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
       }
    }
 }

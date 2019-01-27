@@ -69,10 +69,7 @@ namespace DendyEngine {
       if ( result != VK_SUCCESS ) {
          DENDYENGINE_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
       }*/
-      VkInstanceCreateInfo vkInstanceConfiguration = { };
-      _getGlfwExtensionsForVk( &vkInstanceConfiguration.ppEnabledExtensionNames, vkInstanceConfiguration.enabledExtensionCount );
-      dyVec<dyString> extensions( vkInstanceConfiguration.enabledExtensionCount );
-      m_vulkanInstance = new DendyEngine::PixPhetamine::VulkanSystem::CVolkInstance( extensions );
+      m_vulkanInstance = new DendyEngine::PixPhetamine::VulkanSystem::CVolkInstance( "Dendy Engine - Dendy Softainement", 1,0,0 );
 
    DENDYENGINE_CALLSTACK_EXIT;
    }
@@ -95,7 +92,7 @@ namespace DendyEngine {
 
       VkPhysicalDevice physicalDevicesVec[MAX_PHYSICAL_DEVICES];
       dyUInt physicalDevicesCount = MAX_PHYSICAL_DEVICES;
-      vkEnumeratePhysicalDevices( m_vulkanInstance->m_vulkanInstance, &physicalDevicesCount, physicalDevicesVec );
+      vkEnumeratePhysicalDevices( m_vulkanInstance->getVulkanInstance( ), &physicalDevicesCount, physicalDevicesVec );
 
       // TODO Pick a real one
       VkPhysicalDevice vkPhysicalDevice = physicalDevicesVec[0];
@@ -155,7 +152,7 @@ namespace DendyEngine {
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
    void UGLFWWindowHandle::_setupDisplay( ) {
-      DENDYENGINE_CALLSTACK_ENTER;
+   DENDYENGINE_CALLSTACK_ENTER;
 
       _createVkInstance( );
       DENDYENGINE_LOG( " - Vulkan Instance creation: [ OK ]" );
@@ -168,7 +165,7 @@ namespace DendyEngine {
       
 
 
-      DENDYENGINE_CALLSTACK_EXIT;
+   DENDYENGINE_CALLSTACK_EXIT;
    }
 
 
@@ -195,7 +192,7 @@ namespace DendyEngine {
       DENDYENGINE_CALLSTACK_ENTER;
       glfwTerminate( );
       vkDestroyDevice( m_vulkanDevice, nullptr );
-      vkDestroyInstance( m_vulkanInstance->m_vulkanInstance, nullptr );
+      vkDestroyInstance( m_vulkanInstance->getVulkanInstance( ), nullptr );
       DENDYENGINE_CALLSTACK_EXIT;
    }
 
