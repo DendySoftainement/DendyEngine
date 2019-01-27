@@ -62,8 +62,8 @@ namespace DendyEngine {
       const char* msg,
       void* ) {
 #if DENDYENGINE_MODE_DEBUG
-         dyString ErrorMessage( dyString::allocFormatedConstChar("VolkValidationLayer [ ERROR ]!\n%s\n", msg) );
-         DENDYENGINE_CRITICAL_ERROR( ErrorMessage.asStdString() );
+         dyString ErrorMessage = dyString::format("VolkValidationLayer [ ERROR ]!\n%s\n", msg);
+         DY_CRITICAL_ERROR( ErrorMessage.asStdString( ) );
 #endif // DENDYENGINE_MODE_DEBUG
       return VK_FALSE;
    }

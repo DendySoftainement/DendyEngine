@@ -62,22 +62,26 @@ namespace DendyEngine {
    using dyFloat64 = double;        /// Signed 64b floating-point
 
    using dyString = DendyEngine::DendyFoundation::CustomTypes::dyString;
-   //typedef DendyEngine::DendyFoundation::CustomTypes::dyString dyString;
-
+   /*
    template<class T, class U>
    using dyMap = std::map<T, U>;
+   */
    template<typename  T>
    using dyVec = DendyEngine::DendyFoundation::CustomTypes::dyVec<T>;
    //using dyVec = std::vector<T>;
    //typedef DendyEngine::DendyFoundation::CustomTypes::dyVec<T> dyVec;
+   
+   /*
    template<class T, class U>
    using dyPair = std::pair<T,U>;
    template<class T>
    using dyUniquePtr = std::unique_ptr<T>;
    template<class T>
    using dySharedPtr = std::shared_ptr<T>;
+   */
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Specific to 'LINUX' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+/*
 #ifdef DENDYENGINE_PLATFORM_LINUX
    template<typename T, typename... Args>
    std::unique_ptr<T> createUniquePtr(Args&&... args) {
@@ -92,6 +96,7 @@ namespace DendyEngine {
        return std::make_unique<T>(std::forward<Args>(args)...);
    }
 #endif
+*/
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

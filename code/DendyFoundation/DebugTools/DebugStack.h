@@ -31,11 +31,10 @@
 //// - Internal includes section - ////
 
 //// - Defines and macro section - ////
-//#undef DENDYENGINE_MODE_DEBUG
 
-#ifndef _DENDYENGINE_DEFINEGUARD_DEBUG_SYSTEM
+#ifndef _DENDYENGINE_LOCATION
 
-   // Double macro to display the number of the line instead of "__LINE__"
+// Double macro to display the number of the line instead of "__LINE__"
 #define _DENDYENGINE_DISPLAY_VALUE_HELPER_SECOND_PASS(value) #value
 #define _DENDYENGINE_DISPLAY_VALUE_HELPER(value) _DENDYENGINE_DISPLAY_VALUE_HELPER_SECOND_PASS(value)
 
@@ -49,24 +48,22 @@
 #endif
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-   // Stack display message (file:function:line)
+// Stack display message (file:function:line)
 #define _DENDYENGINE_LOCATION ( __FILE__ "#" _DENDYENGINE_CURRENT_FUNCTION "#" _DENDYENGINE_DISPLAY_VALUE_HELPER(__LINE__) )
+
+#endif
+
+#ifndef _DENDYENGINE_DEFINEGUARD_DEBUG_SYSTEM
 
 ////////////////////////////////////////////////////////////
 // The actually public interface for the Debug system !!! //
 ////////////////////////////////////////////////////////////
 #ifdef DENDYENGINE_MODE_DEBUG
-#define DENDYENGINE_CALLSTACK_ENTER         (&DendyEngine::DendyFoundation::DebugTools::UDebugStack::getInstance())->enter(_DENDYENGINE_LOCATION)
-#define DENDYENGINE_CALLSTACK_EXIT          (&DendyEngine::DendyFoundation::DebugTools::UDebugStack::getInstance())->exit()
-#define DENDYENGINE_LOG(message)            (&DendyEngine::DendyFoundation::DebugTools::UDebugStack::getInstance())->log(message,_DENDYENGINE_LOCATION)
-#define DENDYENGINE_ERROR(message)          (&DendyEngine::DendyFoundation::DebugTools::UDebugStack::getInstance())->error(message,_DENDYENGINE_LOCATION)
-#define DENDYENGINE_CRITICAL_ERROR(message) (&DendyEngine::DendyFoundation::DebugTools::UDebugStack::getInstance())->criticalError(message,_DENDYENGINE_LOCATION)
+#define DENDYENGINE_CALLSTACK_ENTER         (&DendyEngine::DendyFoundation::DebugTools::TheDebugStack::getInstance())->enter(_DENDYENGINE_LOCATION)
+#define DENDYENGINE_CALLSTACK_EXIT          (&DendyEngine::DendyFoundation::DebugTools::TheDebugStack::getInstance())->exit()
 #else
 #define DENDYENGINE_CALLSTACK_ENTER         /***/
 #define DENDYENGINE_CALLSTACK_EXIT          /***/
-#define DENDYENGINE_LOG(message)            /***/
-#define DENDYENGINE_ERROR(message)          /***/
-#define DENDYENGINE_CRITICAL_ERROR(message) /***/
 #endif
 ////////////////////////////////////////////////////////////
 
@@ -85,10 +82,10 @@ namespace DendyEngine {
       namespace DebugTools {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////   Class CDebugMessage                                                                                                                               ////
+////   Class TheDebugStack                                                                                                                               ////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         class UDebugStack {
+         class TheDebugStack {
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Enum/Struct/Constants -----                                                                                                   ////
@@ -138,16 +135,14 @@ namespace DendyEngine {
          //// ----  Object  ---- ////
 
          //// ----  Static  ---- ////
-            static UDebugStack& getInstance( );
+            static TheDebugStack& getInstance( );
             static void destroyInstance( );
 
          //// ---- Accessor ---- ////
 
          //// ----   Core   ---- ////
             void enter( std::string locationStr );
-            void log( std::string messageStr, std::string locationStr );
             void exit( );
-            void error( std::string messageStr, std::string locationStr );
             void criticalError( std::string messageStr, std::string locationStr );
 
          };

@@ -70,7 +70,7 @@ namespace DendyEngine {
       m_memory( a_string ) {
       /***/
    }
-         
+
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
@@ -122,7 +122,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString& dyString::operator+( dyString const& a_string ) {
+   dyString dyString::operator+( dyString const& a_string ) {
       dyString result;
       result.m_memory += a_string.m_memory;
       return result;
@@ -131,7 +131,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString& dyString::operator+( const char* a_string ) {
+   dyString dyString::operator+( const char* a_string ) {
       dyString result;
       result.m_memory += a_string;
       return result;
@@ -140,7 +140,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString& dyString::operator+( int_fast32_t a_integer ) {
+   dyString dyString::operator+( int_fast32_t a_integer ) {
       dyString result( std::to_string( a_integer ) );
       return result;
    }
@@ -148,7 +148,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString& dyString::operator+( float a_float ) {
+   dyString dyString::operator+( float a_float ) {
       dyString result( std::to_string( a_float ) );
       return result;
    }
@@ -156,7 +156,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyString& dyString::operator+( bool a_boolean ) {
+   dyString dyString::operator+( bool a_boolean ) {
       dyString result;
       if ( a_boolean )
          result += "true";
@@ -201,38 +201,10 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   const char* dyString::allocConstCharFancyPanel( dyString a_string ) {
-      dyString fancySign( "/////////////////////////////////////////////////////////////////////////////////////\n////" );
-      //dyString fancySign( "-------------------------------------------------------------------------------------\n----" );
-      dyUInt64 spacesToInsert = 78 - a_string.len( );
-      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
-         fancySign += " ";
-      }
-      fancySign += a_string;
-      for ( dyUInt16 i = 0; i < spacesToInsert / 2; i++ ) {
-         fancySign += " ";
-      }
-      fancySign += "////\n/////////////////////////////////////////////////////////////////////////////////////\n";
-      //fancySign += "----\n---------------------------------------------------------------------------------------\n";
-      return fancySign.asAllocatedConstChar( );
-   }
-
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   const char* dyString::allocConstCharFancySeparationLine( ) {
-      dyString fancySign( "/////////////////////////////////////////////////////////////////////////////////////\n" );
-      //dyString fancySign( "-------------------------------------------------------------------------------------\n" );
-      return fancySign.asAllocatedConstChar( );
-   }
-
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   //
-   //----------------------------------------------------------------------------------------------------------------------------------------//
-   const char* dyString::allocFormatedConstChar( const char* a_format, ... ) {
+   dyString dyString::format( const char* a_format, ... ) {
       // Tipiaked from https://www.codeproject.com/articles/15115/how-to-format-a-string
 
-      std::string result( "" );
+      dyString result;
 
       if ( a_format != nullptr ) {
          va_list marker = NULL;
@@ -248,17 +220,14 @@ namespace DendyEngine {
          int nWritten = _vsnprintf_s( &buffer[0], buffer.size( ), len, a_format, marker );
 
          if ( nWritten > 0 ) {
-            result = &buffer[0];
+            result.m_memory = &buffer[0];
          }
 
          // Reset variable arguments
          va_end( marker );
       }
 
-      char* allocatedResult = new char[result.length()+1];
-      strcpy( allocatedResult, result.c_str() ); // this puts a '\0' at the end ;)
-
-      return allocatedResult;
+      return result;
    }
 
 
@@ -284,7 +253,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyBool const& dyString::find( dyString const& a_toFind ) const {
+   bool dyString::find( dyString const& a_toFind ) const {
       bool result = m_memory.find( a_toFind.m_memory ) == std::string::npos;
       return result;
    }
@@ -292,7 +261,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   dyBool const& dyString::find( const char* a_toFind ) const {
+   bool dyString::find( const char* a_toFind ) const {
       dyString otherString( a_toFind );
       bool result = m_memory.find( otherString.m_memory ) == std::string::npos;
       return result;

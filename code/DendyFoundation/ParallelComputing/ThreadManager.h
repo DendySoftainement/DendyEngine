@@ -48,7 +48,7 @@ namespace DendyEngine {
 ////   Class UThreadManager
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-         class UThreadManager {
+         class TheThreadManager {
 
          ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
          //// ---- Enum/Struct/Constants -----                                                                                                   ////
@@ -71,10 +71,12 @@ namespace DendyEngine {
 
          public:
          //// ----  Object  ---- ////
-            UThreadManager();
-            ~UThreadManager();
+            TheThreadManager();
+            ~TheThreadManager();
 			
-		 //// ----  Static  ---- ////
+		   //// ----  Static  ---- ////
+            static TheThreadManager& getInstance( );
+            static void destroyInstance( );
 
          private:
          //// ----  Forbid  ---- ////

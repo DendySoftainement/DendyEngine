@@ -9,6 +9,7 @@
 
 //// -Foundation includes section- ////
 #include "DendyFoundation/DebugTools/DebugStack.h"
+#include "DendyFoundation/DebugTools/Logger.h"
 
 //// - Internal includes section - ////
 
@@ -67,7 +68,7 @@ namespace DendyEngine {
       VkResult result = vkCreateInstance( &vkInstanceConfiguration, nullptr, &m_vulkanInstance );
 
       if ( result != VK_SUCCESS ) {
-         DENDYENGINE_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
+         DY_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
       }*/
       m_vulkanInstance = new DendyEngine::PixPhetamine::VulkanSystem::CVolkInstance( "Dendy Engine - Dendy Softainement", 1,0,0 );
 
@@ -132,7 +133,7 @@ namespace DendyEngine {
       
       VkResult result = vkCreateDevice( vkPhysicalDevice, &vkDeviceConfiguration, nullptr, &vkDevice );
       if ( result != VK_SUCCESS ) {
-         DENDYENGINE_CRITICAL_ERROR( "Failed to create a Vulkan Device" );
+         DY_CRITICAL_ERROR( "Failed to create a Vulkan Device" );
       }
 
 
@@ -155,11 +156,11 @@ namespace DendyEngine {
    DENDYENGINE_CALLSTACK_ENTER;
 
       _createVkInstance( );
-      DENDYENGINE_LOG( " - Vulkan Instance creation: [ OK ]" );
+      DY_LOG( " - Vulkan Instance creation: [ OK ]" );
       _createVkDevice( );
-      DENDYENGINE_LOG( " - Vulkan Device creation: [ OK ]" );
+      DY_LOG( " - Vulkan Device creation: [ OK ]" );
       _initGlfw( );
-      DENDYENGINE_LOG( " - GLFW Initialization: [ OK ]" );
+      DY_LOG( " - GLFW Initialization: [ OK ]" );
 
       
       
@@ -244,7 +245,7 @@ namespace DendyEngine {
       windowBinding.window = glfwCreateWindow( m_config.width, m_config.height, m_config.caption.asConstChar( ), nullptr, nullptr );
 
       if ( windowBinding.window == nullptr ) {
-         DENDYENGINE_CRITICAL_ERROR( "Unable to create the window!" );
+         DY_CRITICAL_ERROR( "Unable to create the window!" );
          exit( 666 );
       }
 

@@ -4,6 +4,7 @@
 
 #include "DendyFoundation/Types.h"
 #include "DendyFoundation/DebugTools/DebugStack.h"
+#include "DendyFoundation/DebugTools/Logger.h"
 #include "DendyFoundation/DebugTools/Timer.h"
 #include "PixPhetamine/WindowHandle/GLFWWindowHandle.h"
 #include "PixPhetamine/WindowHandle/WindowHandleInterface.h"
@@ -20,10 +21,6 @@ int main( int argc, char** argv ) {
    DendyFoundation::DebugTools::CTimer performanceTimer;
    performanceTimer.reset( );
 
-   printf( dyString::allocFormatedConstChar("%s %s", "Heyyou", "out there on your own") );
-
-   DENDYENGINE_LOG( "ONE" );
-   DENDYENGINE_LOG( dyString::allocFormatedConstChar("%s", "IsThe lonliest number") );
 
 
    printf( "Performance timer: elapsed nanoseconds: %llu, ms: %llu\n", performanceTimer.getElapsedNanoseconds( ), performanceTimer.getElapsedMiliseconds( ) );

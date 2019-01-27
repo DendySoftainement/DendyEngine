@@ -9,6 +9,7 @@
 
 //// -Foundation includes section- ////
 #include "DendyFoundation/DebugTools/DebugStack.h"
+#include "DendyFoundation/DebugTools/Logger.h"
 #include "PixPhetamine/VulkanDebug/VolkDebug.h"
 
 //// - Internal includes section - ////
@@ -51,13 +52,13 @@ namespace DendyEngine {
 
       //// glfwInit
       if ( glfwInit( ) == false )
-         DENDYENGINE_CRITICAL_ERROR( "Failed to initialize GLFW" );
-      DENDYENGINE_LOG( "GLFW System Initialised [ OK ]" );
+         DY_CRITICAL_ERROR( "Failed to initialize GLFW" );
+      DY_LOG( "GLFW System Initialised [ OK ]" );
 
       //// check is Vulkan is supported
       if ( glfwVulkanSupported( ) == false )
-         DENDYENGINE_CRITICAL_ERROR( "This version of GLFW on this machine doesn't support Vulkan" );
-      DENDYENGINE_LOG( "GLFW Vulkan support [ OK ]" );
+         DY_CRITICAL_ERROR( "This version of GLFW on this machine doesn't support Vulkan" );
+      DY_LOG( "GLFW Vulkan support [ OK ]" );
 
    DENDYENGINE_CALLSTACK_EXIT;
    }
@@ -76,12 +77,13 @@ namespace DendyEngine {
 
 
       // Display fancy sign with supported extensions
-      DENDYENGINE_LOG( dyString::allocConstCharFancyPanel( "SUPPORTED VULKAN EXTENSIONS" ) );
+      DY_LOG_SIGN( "SUPPORTED VULKAN EXTENSIONS" );
       for ( dyUInt i = 0; i < supportedExtensionCount; i++ ) {
          m_supportedExtensionNamesVec.append( pSupportedExtensionsConstChar[i] );
-         DENDYENGINE_LOG( dyString::allocFormatedConstChar("//// - Extension \"%s\"\n", pSupportedExtensionsConstChar[i] ) );
+         dyString LogMessage = dyString::format( "//// - Extension '%s'", pSupportedExtensionsConstChar[i] );
+         DY_LOG( LogMessage );
       }
-      DENDYENGINE_LOG( dyString::allocFormatedConstChar( "%s\n", dyString::allocConstCharFancySeparationLine( ) ) );
+      DY_LOG_SEPARATION_LINE( );
       
 
       //// Phase 2 Verify and remove not supoorted (and crash if required):
@@ -91,13 +93,14 @@ namespace DendyEngine {
 
       for ( dyString& extensionToActivate : m_activeExtensionNamesVec.asIterable( ) ) {
          if ( m_supportedExtensionNamesVec.find( extensionToActivate ) == false ) {
-            DENDYENGINE_CRITICAL_ERROR( dyString::allocFormatedConstChar( "Extension '%s' for Vulkan unavailable on this support!", extensionToActivate.asConstChar( ) ) );
+            dyString ErrorMessage = dyString::format( "Extension '%s' for Vulkan unavailable on this support!", extensionToActivate.asConstChar( ) );
+            DY_CRITICAL_ERROR( ErrorMessage );
          }
          actuallyActiveNamesVec.append( extensionToActivate.asConstChar( ) );
       }
 
    DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( actuallyActiveNamesVec );
+      return actuallyActiveNamesVec;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
@@ -115,13 +118,15 @@ namespace DendyEngine {
       vkEnumerateInstanceLayerProperties( &layerProprietiesCount, layerProrietiesVec.data( ) );
          
       // Display fancy sign with layers
-      DENDYENGINE_LOG( dyString::allocConstCharFancyPanel( "ENABLED VULKAN LAYERS" ) );
+      DY_LOG_SIGN( "ENABLED VULKAN LAYERS" );
       for each ( VkLayerProperties layerPropriety in layerProrietiesVec.asIterable( ) ) {
          m_supportedValidationLayerNamesVec.append( layerPropriety.layerName );
-         DENDYENGINE_LOG( dyString::allocFormatedConstChar( "//// - Layer \"%s\"\n", layerPropriety.layerName ) );
-         DENDYENGINE_LOG( dyString::allocFormatedConstChar( "////    -> %s\n", layerPropriety.description ) );
+         dyString LogMessage = dyString::format( "//// - Layer '%s'", layerPropriety.layerName );
+         DY_LOG( LogMessage );
+         LogMessage = dyString::format( "////    -> %s", layerPropriety.description );
+         DY_LOG( LogMessage );
       }
-      DENDYENGINE_LOG( dyString::allocFormatedConstChar( "%s\n", dyString::allocConstCharFancySeparationLine( ) ) );
+      DY_LOG_SEPARATION_LINE( );
 
       //for ( int i = 0; i < 10000000; i++ )
       //   dyString::allocFormatedConstChar( "%s\n", dyString::allocConstCharFancySeparationLine( ) );
@@ -133,13 +138,14 @@ namespace DendyEngine {
 
       for ( dyString& layerToActivate : m_activeValidationLayerNamesVec.asIterable( ) ) {
          if ( m_supportedValidationLayerNamesVec.find( layerToActivate ) == false ) {
-            DENDYENGINE_CRITICAL_ERROR( dyString::allocFormatedConstChar( "Layer '%s' for Vulkan unavailable on this support!", layerToActivate.asConstChar( ) ) );
+            dyString ErrorMessage = dyString::format( "Layer '%s' for Vulkan unavailable on this support!", layerToActivate.asConstChar( ) );
+            DY_CRITICAL_ERROR( ErrorMessage );
          }
          actuallyActiveNamesVec.append( layerToActivate.asConstChar( ) );
       }
 
    DENDYENGINE_CALLSTACK_EXIT;
-      return std::move( actuallyActiveNamesVec );
+      return actuallyActiveNamesVec;
    }
 
    //----------------------------------------------------------------------------------------------------------------------------------------//
@@ -217,7 +223,7 @@ namespace DendyEngine {
 
 
       if ( result != VK_SUCCESS ) {
-         DENDYENGINE_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
+         DY_CRITICAL_ERROR( "Failed to create a Vulkan instance" );
       }
       
 #if DENDYENGINE_MODE_DEBUG

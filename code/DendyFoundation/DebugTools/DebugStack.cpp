@@ -35,7 +35,7 @@ namespace DendyEngine {
 
 // SCodeLocation
 //{
-   UDebugStack::SCodeLocation::SCodeLocation( std::string a_rawLocationStr ) {
+   TheDebugStack::SCodeLocation::SCodeLocation( std::string a_rawLocationStr ) {
       if (a_rawLocationStr == "") {
          return;
       }
@@ -56,7 +56,7 @@ namespace DendyEngine {
 ////                                                                                                                                                        ////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// UDebugStack
+// TheDebugStack
 //{
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    ////  ================================================================================================================================  ////
@@ -67,7 +67,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void UDebugStack::_dump() {
+   void TheDebugStack::_dump() {
       std::stack<SDebugEvent> backupStack = m_stack;
       std::stack<SDebugEvent> revertedStack;
       
@@ -84,7 +84,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void UDebugStack::_flush( std::stack<SDebugEvent> a_stackToFlush ) {
+   void TheDebugStack::_flush( std::stack<SDebugEvent> a_stackToFlush ) {
       SDebugEvent currentDebug;
       std::string callStackStr;
 
@@ -102,18 +102,6 @@ namespace DendyEngine {
             SCodeLocation location = currentDebug.context;
             callStackStr += levelStr + ">> '" + location.functionStr + "'\n";
          }
-
-         /*
-         if (currentDebug.type == EEventType::DY_LOG) {
-            std::string levelStr = "";
-            for (dyUInt i_level = 0; i_level<level; i_level++) {
-               levelStr += "  ";
-            }
-            SCodeLocation location = currentDebug.context;
-            callStackStr += levelStr + "<LOG>\n";
-            callStackStr += levelStr + "|  " + currentDebug.messageStr + '\n';
-         }
-         */
 
          if (currentDebug.type == EEventType::DY_CRITICAL_ERROR) {
             level++;
@@ -140,10 +128,10 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    // Singleton pattern stuff (unique creation only)
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   UDebugStack& UDebugStack::getInstance() {
-      static UDebugStack* debugStack = nullptr;
+   TheDebugStack& TheDebugStack::getInstance() {
+      static TheDebugStack* debugStack = nullptr;
       if (debugStack == nullptr) {
-         debugStack = new UDebugStack();
+         debugStack = new TheDebugStack();
       }
       return *debugStack;
    }
@@ -151,8 +139,8 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    // Singleton pattern stuff (destruction)
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void UDebugStack::destroyInstance() {
-      static UDebugStack* debugStack = &getInstance();
+   void TheDebugStack::destroyInstance() {
+      static TheDebugStack* debugStack = &getInstance();
       if (debugStack != nullptr) {
          delete debugStack;
       }
@@ -168,7 +156,7 @@ namespace DendyEngine {
    //----------------------------------------------------------------------------------------------------------------------------------------//
    //
    //----------------------------------------------------------------------------------------------------------------------------------------//
-   void UDebugStack::enter( std::string a_locationStr ) {
+   void TheDebugStack::enter( std::string a_locationStr ) {
       SDebugEvent debugEvent;
       debugEvent.type = EEventType::DY_BEGIN;
       debugEvent.messageStr = "";
@@ -176,16 +164,7 @@ namespace DendyEngine {
       m_stack.push( debugEvent );
    }
 
-   void UDebugStack::log( std::string a_messageStr, std::string a_locationStr ) {
-      SDebugEvent debugEvent;
-      debugEvent.type = EEventType::DY_LOG;
-      debugEvent.messageStr = a_messageStr;
-      debugEvent.context = SCodeLocation( a_locationStr );
-      m_stack.push( debugEvent );
-      printf( "%s\n", a_messageStr.c_str( ) );
-   }
-
-   void UDebugStack::exit() {
+   void TheDebugStack::exit() {
       while (!m_stack.empty() && m_stack.top().type != EEventType::DY_BEGIN) {
          m_stack.pop();
       }
@@ -194,41 +173,25 @@ namespace DendyEngine {
       }
    }
 
-   void UDebugStack::error( std::string a_messageStr, std::string a_locationStr  ) {
-      SDebugEvent debugEvent;
-      debugEvent.type = EEventType::DY_ERROR;
-      debugEvent.messageStr = a_messageStr;
-      debugEvent.context = SCodeLocation( a_locationStr );
-      m_stack.push( debugEvent );
-   }
-
-   void UDebugStack::criticalError( std::string a_messageStr, std::string a_locationStr  ) {
+   void TheDebugStack::criticalError( std::string a_messageStr, std::string a_locationStr  ) {
       SDebugEvent debugEvent;
       debugEvent.type = EEventType::DY_CRITICAL_ERROR;
       debugEvent.messageStr = a_messageStr;
       debugEvent.context = SCodeLocation( a_locationStr );
       m_stack.push( debugEvent );
 
-      const char* tempConstChar = dyString::allocConstCharFancyPanel( "CRITICAL ERROR" );
-      printf( tempConstChar );
-      delete[] tempConstChar;
+      printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n-=-=-=   CRITICAL ERROR\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
 
 
       printf( "%s\n", a_messageStr.c_str() );
 
-      tempConstChar = dyString::allocConstCharFancySeparationLine( );
-      printf( tempConstChar );
-      delete[] tempConstChar;
+      printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
       
-      tempConstChar = dyString::allocConstCharFancyPanel( "CALLSTACK" );
-      printf( tempConstChar );
-      delete[] tempConstChar;
+      printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n-=-=-=   CALLSTACK\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
 
       _dump();
 
-      tempConstChar = dyString::allocConstCharFancySeparationLine( );
-      printf( tempConstChar );
-      delete[] tempConstChar;
+      printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" );
 
       while ( true )
       {

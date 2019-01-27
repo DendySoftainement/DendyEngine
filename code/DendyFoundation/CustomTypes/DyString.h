@@ -104,11 +104,11 @@ namespace DendyEngine {
             bool operator>=( dyString const& a_string ) const;
             bool operator<=( dyString const& a_string ) const;*/
 
-            dyString& operator+( dyString const& a_string );
-            dyString& operator+( const char* a_string );
-            dyString& operator+( int_fast32_t a_integer );
-            dyString& operator+( float a_float );
-            dyString& operator+( bool a_boolean );
+            dyString operator+( dyString const& a_string );
+            dyString operator+( const char* a_string );
+            dyString operator+( int_fast32_t a_integer );
+            dyString operator+( float a_float );
+            dyString operator+( bool a_boolean );
 
             bool operator==( dyString const& a_string );
             bool operator==( const char* a_string );
@@ -119,9 +119,7 @@ namespace DendyEngine {
 
          public:
          //// ----  Static  ---- ////
-            static const char* allocConstCharFancyPanel( dyString a_string );
-            static const char* allocConstCharFancySeparationLine( );
-            static const char* allocFormatedConstChar( const char* a_format, ... );
+            static dyString format( const char* a_format, ... );
 
          //// ---- Accessor ---- ////
 
@@ -134,7 +132,7 @@ namespace DendyEngine {
             /// Like the c_str() method, returns char string data (ending with '\0')
             const char* asAllocatedConstChar( ) const {
                char* allocatedResult = new char[m_memory.length( ) + 1];
-               strcpy( allocatedResult, m_memory.c_str( ) ); // this puts a '\0' at the end ;)
+               strcpy_s( allocatedResult, m_memory.length( ) + 1, m_memory.c_str( ) ); // this puts a '\0' at the end ;)
                return allocatedResult;
             }
 
@@ -151,8 +149,8 @@ namespace DendyEngine {
                return static_cast<uint_fast16_t>( m_memory.length( ) );
             }
 
-            bool const& find( dyString const& a_toFind ) const;
-            bool const& find( const char* a_toFind ) const;
+            bool find( dyString const& a_toFind ) const;
+            bool find( const char* a_toFind ) const;
 
             void replace( dyString const& a_toFind, dyString const& a_newValue );
             void replace( const char* a_toFind, const char* a_newValue );
